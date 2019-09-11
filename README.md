@@ -2,8 +2,10 @@
 
 微信支付API V3 SDK for GO, 集成简单，功能完善，持续更新，支持公钥证书签名和验签。
 
-
-<font color=#ff0000 size=3>开发中!!! GO GO GO</font>
+**开发中!!! GO GO GO**
+**开发中!!! GO GO GO**
+**开发中!!! GO GO GO**
+**开发中!!! GO GO GO**
 
 ### 主要特性
 - 待补充
@@ -25,5 +27,7 @@ https://wechatpay-api.gitbook.io/wechatpay-api-v3/
 
 [TOC]
 
+### License
+This project is licensed under the MIT License.
 
 ### End

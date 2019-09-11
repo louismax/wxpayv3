@@ -1,4 +1,4 @@
-# wechatpay-apiv3
+# wxpayv3 (wechatpay-api-v3)
 
 微信支付API V3 SDK for GO, 集成简单，功能完善，持续更新，支持公钥证书签名和验签。
 
@@ -13,7 +13,7 @@
 ### 主要特性
 - 待补充
 
-### wechatPay-API-v3官方文档：
+### WechatPay-API-v3官方文档：
 https://wechatpay-api.gitbook.io/wechatpay-api-v3/
 全新的微信支付API v3，相较于的之前微信支付API，主要区别是：
 - 遵循统一的Restful的设计风格；

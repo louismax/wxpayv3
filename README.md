@@ -3,7 +3,7 @@
 微信支付API V3 SDK for GO, 集成简单，功能完善，持续更新，支持公钥证书签名和验签。
 
 
-<font color=#ff0000 size=3>**开发中!!!  GO GO GO**</font>
+<font color=#ff0000 size=3>开发中!!! GO GO GO</font>
 
 ### 主要特性
 - 待补充

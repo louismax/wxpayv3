@@ -12,12 +12,12 @@ import (
 //CancelRequest 主动解约申请
 type CancelRequest struct {
 	Organization_id string `json:"organization_id"`
-	user_id         string `json:"user_id"`
+	User_id         string `json:"user_id"`
 }
 
 // APIUrl CancelRequest APIURL
 func (this CancelRequest) APIUrl() string {
-	return fmt.Sprintf("/v3/offlinefacemch/organizations/%s/users/user-id/%s/terminate-contract", this.Organization_id, this.user_id)
+	return fmt.Sprintf("/v3/offlinefacemch/organizations/%s/users/user-id/%s/terminate-contract", this.Organization_id, this.User_id)
 }
 
 // Method CancelRequest Method

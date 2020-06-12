@@ -10,7 +10,7 @@ func (this *Client) CancelRequest(param CancelRequest) (bool, error) {
 	if param.Organization_id == "" {
 		return false, errors.New("机构ID不能为空！")
 	}
-	if param.user_id == "" {
+	if param.User_id == "" {
 		return false, errors.New("刷脸用户ID不能为空！")
 	}
 

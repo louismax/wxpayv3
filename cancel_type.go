@@ -6,7 +6,35 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 )
+
+//CancelRequest 主动解约申请
+type CancelRequest struct {
+	Organization_id string `json:"organization_id"`
+	user_id         string `json:"user_id"`
+}
+
+// APIUrl CancelRequest APIURL
+func (this CancelRequest) APIUrl() string {
+	return fmt.Sprintf("/v3/offlinefacemch/organizations/%s/users/user-id/%s/terminate-contract", this.Organization_id, this.user_id)
+}
+
+// Method CancelRequest Method
+func (this CancelRequest) Method() string {
+	return "POST"
+}
+
+// Params CancelRequest Params
+func (this CancelRequest) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+// RawJsonStr CancelRequest RawJsonStr
+func (this CancelRequest) RawJsonStr() string {
+	return ""
+}
 
 //CancelCiphertext 解约报文数据
 type CancelCiphertext struct {

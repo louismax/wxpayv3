@@ -113,7 +113,12 @@ func (this *Client) doRequest(param Param, result interface{}) (string, error) {
 
 	authstr := fmt.Sprintf("%s mchid=\"%s\",serial_no=\"%s\",nonce_str=\"%s\",signature=\"%s\",timestamp=\"%s\"", AuthType, this.Mchid, this.SerialNo, sjstr, signdata, strconv.FormatInt(timeUnix, 10))
 
+	//fmt.Println(fmt.Sprintf("authstr:%+v", authstr))
+
 	apiurl := ServerUrl + AssembleUrl(param)
+
+	//fmt.Println(fmt.Sprintf("apiurl:%+v", apiurl))
+	//fmt.Println(fmt.Sprintf("apiurl:%+v", apiurl))
 
 	req, err := http.NewRequest(param.Method(), apiurl, bytes.NewBuffer([]byte(param.RawJsonStr())))
 

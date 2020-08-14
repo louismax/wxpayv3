@@ -26,18 +26,18 @@ func TestClient_GetPresign_Token(t *testing.T) {
 			client.InitCertificate(cretinfo)
 
 			param := Presign_Token{}
-			param.Business_name = "K12"
-			param.Facepay_user.Out_user_id = ""
-			param.Facepay_user.Identification_name = ""
-			param.Facepay_user.Organization_id = ""
-			param.Facepay_user.Identification.Identification_type = "IDCARD"
-			param.Facepay_user.Identification.Identification_number = ""
-			param.Facepay_user.Phone = ""
-			param.Limit_bank_card.Bank_card_number = ""
-			param.Limit_bank_card.Identification_name = ""
-			param.Limit_bank_card.Identification.Identification_type = "IDCARD"
-			param.Limit_bank_card.Identification.Identification_number = ""
-			param.Limit_bank_card.Valid_thru = ""
+			param.Business_name = "K12"                                         //固定值
+			param.Facepay_user.Out_user_id = ""                                 //商户侧userid
+			param.Facepay_user.Identification_name = ""                         //姓名
+			param.Facepay_user.Organization_id = ""                             //所属学校机构id
+			param.Facepay_user.Identification.Identification_type = "IDCARD"    //固定值，必须身份证
+			param.Facepay_user.Identification.Identification_number = ""        //身份证号
+			param.Facepay_user.Phone = ""                                       //手机号
+			param.Limit_bank_card.Bank_card_number = ""                         //银行卡号
+			param.Limit_bank_card.Identification_name = ""                      //开卡人姓名
+			param.Limit_bank_card.Identification.Identification_type = "IDCARD" //固定值，必须身份证
+			param.Limit_bank_card.Identification.Identification_number = ""     //开卡人身份证号
+			param.Limit_bank_card.Valid_thru = ""                               //银行卡有效期,部分银行需要
 
 			res, err := client.GetPresign_Token(param)
 			if err != nil {

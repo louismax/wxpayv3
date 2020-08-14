@@ -3,6 +3,7 @@ package wxpayv3
 import (
 	"encoding/json"
 	"errors"
+	"github.com/louismax/wxpayv3/marketing"
 	"strings"
 )
 
@@ -86,6 +87,32 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 		} else {
 			return errmsg, errors.New("系统错误!")
 		}
+	}
+	return result, nil
+}
+
+//SendCoupon 发放代金券
+func (this *Client) SendCoupon(param marketing.LssueCoupons) (interface{}, error) {
+	result := marketing.RespLssueCoupons{}
+	//fmt.Println(fmt.Sprintf("Request:%+v", param))
+
+	rqs, err := this.doRequest(param, &result)
+	if err != nil {
+		return result, err
+	}
+
+	if strings.Contains(rqs, "code") {
+		errmsg := SysError{}
+
+		//fmt.Println(fmt.Sprintf("RESP:%+v", rqs))
+
+		err = json.Unmarshal([]byte(rqs), &errmsg)
+		if err != nil {
+			return nil, err
+		}
+
+		return errmsg, errors.New("系统错误!")
+
 	}
 	return result, nil
 }

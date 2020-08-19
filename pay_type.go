@@ -14,18 +14,19 @@ const (
 )
 
 type ReqCreatePayCredential struct {
-	Pay_credential    string `json:"pay_credential"` //支付凭证
-	Mchid             string `json:"mchid"`          //商户号
-	Sub_mchid         string `json:"sub_mchid"`
-	Appid             string `json:"appid"`
-	Sub_appid         string `json:"sub_appid"`
-	Amount            int64  `json:"amount"`
-	Device_ip         string `json:"device_ip"`
-	Mac               string `json:"mac"`
-	Description       string `json:"description"`  //商品信息
-	Attach            string `json:"attach"`       //商户附加信息
-	Out_trade_no      string `json:"out_trade_no"` //商户订单号
-	Business_scene_id int    `json:"business_scene_id"`
+	PayCredential   string `json:"pay_credential"` //支付凭证
+	Mchid           string `json:"mchid"`          //商户号
+	SubMchid        string `json:"sub_mchid"`
+	Appid           string `json:"appid"`
+	SubAppid        string `json:"sub_appid"`
+	Amount          int64  `json:"amount"`
+	DeviceIp        string `json:"device_ip"`
+	Mac             string `json:"mac"`
+	Description     string `json:"description"`  //商品信息
+	Attach          string `json:"attach"`       //商户附加信息
+	OutTradeNo      string `json:"out_trade_no"` //商户订单号
+	BusinessSceneId int    `json:"business_scene_id"`
+	GoodsTag        string `json:"goods_tag"` //优惠标记
 }
 
 type CreatePayCredential struct {

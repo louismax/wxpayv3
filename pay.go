@@ -3,25 +3,26 @@ package wxpayv3
 import (
 	"encoding/json"
 	"errors"
+	"github.com/louismax/wxpayv3/marketing"
 	"strings"
 )
 
 //CreatePayCredential 申请扣款
 func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface{}, error) {
 	result := RespCreatePayCredential{}
-	if param.Pay_credential == "" {
+	if param.PayCredential == "" {
 		return result, errors.New("支付凭证不能为空！")
 	}
 	if param.Mchid == "" {
 		return result, errors.New("商户号不能为空！")
 	}
-	if param.Sub_mchid == "" {
+	if param.SubMchid == "" {
 		return result, errors.New("子商户号不能为空！")
 	}
 	if param.Amount < 1 {
 		return result, errors.New("支付金额不能为空！")
 	}
-	if param.Device_ip == "" {
+	if param.DeviceIp == "" {
 		return result, errors.New("设备IP不能为空！")
 	}
 	if param.Mac == "" {
@@ -33,34 +34,36 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 	if param.Attach == "" {
 		return result, errors.New("商户备注信息无效")
 	}
-	if param.Out_trade_no == "" {
+	if param.OutTradeNo == "" {
 		return result, errors.New("商户订单号无效")
 	}
-	if param.Business_scene_id != Business_scene_type_Mess && param.Business_scene_id != Business_scene_type_Supermarket && param.Business_scene_id != Business_scene_type_Infirmary && param.Business_scene_id != Business_scene_type_Dev {
+	if param.BusinessSceneId != Business_scene_type_Mess && param.BusinessSceneId != Business_scene_type_Supermarket && param.BusinessSceneId != Business_scene_type_Infirmary && param.BusinessSceneId != Business_scene_type_Dev {
 		return result, errors.New("支付场景无效")
 	}
 
 	reqdata := CreatePayCredential{}
-	reqdata.Pay_credential = param.Pay_credential
+	reqdata.Pay_credential = param.PayCredential
 
 	reqdata.Merchant_info.Mchid = param.Mchid
-	reqdata.Merchant_info.Sub_mchid = param.Sub_mchid
+	reqdata.Merchant_info.Sub_mchid = param.SubMchid
 	if param.Appid != "" {
 		reqdata.Merchant_info.Appid = param.Appid
 	}
-	if param.Sub_appid != "" {
-		reqdata.Merchant_info.Sub_appid = param.Sub_appid
+	if param.SubAppid != "" {
+		reqdata.Merchant_info.Sub_appid = param.SubAppid
 	}
 	reqdata.Trade_amount_info.Amount = param.Amount
 	reqdata.Trade_amount_info.Currency = "CNY"
-	reqdata.Scene_info.Device_ip = param.Device_ip
+	reqdata.Scene_info.Device_ip = param.DeviceIp
 	reqdata.Device_info.Mac = param.Mac
-	reqdata.Goods_tag = ""
+	if param.GoodsTag != "" {
+		reqdata.Goods_tag = param.GoodsTag
+	}
 	reqdata.Description = param.Description
 	reqdata.Attach = param.Attach
-	reqdata.Out_trade_no = param.Out_trade_no
+	reqdata.Out_trade_no = param.OutTradeNo
 	reqdata.Business_info.Business_product_id = Business_scene_type_K12
-	reqdata.Business_info.Business_scene_id = param.Business_scene_id
+	reqdata.Business_info.Business_scene_id = param.BusinessSceneId
 
 	//b, _ := json.Marshal(reqdata)
 	//fmt.Println(string(b))
@@ -86,6 +89,48 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 		} else {
 			return errmsg, errors.New("系统错误!")
 		}
+	}
+	return result, nil
+}
+
+//SendCoupon 发放代金券
+func (this *Client) SendCoupon(param marketing.LssueCoupons) (interface{}, error) {
+	result := marketing.RespLssueCoupons{}
+	if param.Appid == "" {
+		return result, errors.New("AppID不能为空！")
+	}
+	if param.Openid == "" {
+		return result, errors.New("OpenID不能为空！")
+	}
+	if param.Stock_id == "" {
+		return result, errors.New("券批次号不能为空！")
+	}
+	if param.Stock_creator_mchid == "" {
+		return result, errors.New("发券商户号不能为空！")
+	}
+	if param.Out_request_no == "" {
+		return result, errors.New("商户发券单号不能为空！")
+	}
+
+	//fmt.Println(fmt.Sprintf("Request:%+v", param))
+
+	rqs, err := this.doRequest(param, &result)
+	if err != nil {
+		return result, err
+	}
+
+	if strings.Contains(rqs, "code") {
+		errmsg := SysError{}
+
+		//fmt.Println(fmt.Sprintf("RESP:%+v", rqs))
+
+		err = json.Unmarshal([]byte(rqs), &errmsg)
+		if err != nil {
+			return nil, err
+		}
+
+		return errmsg, errors.New("系统错误!")
+
 	}
 	return result, nil
 }

@@ -123,8 +123,9 @@ type PromotionList struct {
 }
 
 type CorePaymentInfo struct {
-	Bank_type   string `json:"bank_type"`   //付款银行
-	Amount      int64  `json:"amount"`      //支付金额
-	Currency    string `json:"currency"`    //支付币种
-	Advance_pay bool   `json:"advance_pay"` //是否发生垫资
+	Bank_type         string `json:"bank_type"` //付款银行
+	Core_payment_info struct {
+		Amount   int64  `json:"amount"`   //支付金额
+		Currency string `json:"currency"` //支付币种
+	} `json:"core_payment_info"`
 }

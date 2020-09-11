@@ -121,6 +121,8 @@ func (this *Client) doRequest(param Param, result interface{}) (string, error) {
 	//fmt.Println(fmt.Sprintf("apiurl:%+v", apiurl))
 
 	req, err := http.NewRequest(param.Method(), apiurl, bytes.NewBuffer([]byte(param.RawJsonStr())))
+	//设置短连接
+	req.Close = true
 
 	if err != nil {
 		return "", err

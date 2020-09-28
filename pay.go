@@ -3,6 +3,7 @@ package wxpayv3
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/louismax/wxpayv3/marketing"
 	"strings"
 )
@@ -83,11 +84,15 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 		//errb, _ := json.Marshal(errmsg)
 		//fmt.Println(string(errb))
 		if errmsg.Code == "ORDER_CLOSED" {
-			return errmsg, errors.New("发起扣款失败，请换单号重试!")
-		} else if errmsg.Code == "ORDER_NOT_EXIST" {
-			return errmsg, errors.New("扣款超过限额，订单已失效!")
+			return errmsg, errors.New("当前订单已经关闭，请换单号继续扣款!")
+		} else if errmsg.Code == "RESOURCE_ALREADY_EXISTS" {
+			return errmsg, errors.New("订单已经支付，请勿重复扣款!")
+		} else if errmsg.Code == "PARAM_ERROR" {
+			return errmsg, errors.New("参数错误，请检查参数!")
+		} else if errmsg.Code == "SYSTEM_ERROR" {
+			return errmsg, errors.New("系统错误，请稍后重试!")
 		} else {
-			return errmsg, errors.New("系统错误!")
+			return errmsg, errors.New(fmt.Sprintf("系统异常[%s]!", errmsg.Code))
 		}
 	}
 	return result, nil

@@ -101,6 +101,7 @@ type RespCreatePayCredential struct {
 	Core_payment_info CorePaymentInfo `json:"core_payment_info"` //支付信息
 	Trade_type        string          `json:"trade_type"`        //交易类型
 	Trade_state       string          `json:"trade_state"`       //交易状态
+	Trade_state_desc  string          `json:"trade_state_desc"`  //交易状态描述
 	Body              string          `json:"body"`              //商品信息
 	Attach            string          `json:"attach"`            //商户附加信息
 	Payment_time      string          `json:"payment_time"`      //支付成功时间

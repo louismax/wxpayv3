@@ -92,7 +92,7 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 		} else if errmsg.Code == "SYSTEM_ERROR" {
 			return errmsg, errors.New("系统错误，请稍后重试!")
 		} else {
-			return errmsg, errors.New(fmt.Sprintf("系统异常[%s]!", errmsg.Code))
+			return errmsg, errors.New(fmt.Sprintf("系统异常:%+v", rqs))
 		}
 	}
 	return result, nil

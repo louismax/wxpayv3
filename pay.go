@@ -84,15 +84,15 @@ func (this *Client) CreatePayCredential(param ReqCreatePayCredential) (interface
 		//errb, _ := json.Marshal(errmsg)
 		//fmt.Println(string(errb))
 		if errmsg.Code == "ORDER_CLOSED" {
-			return errmsg, errors.New("当前订单已经关闭，请换单号继续扣款!")
+			return errmsg, errors.New(fmt.Sprintf("当前订单已经关闭，请换单号继续扣款!response:%+v", rqs))
 		} else if errmsg.Code == "RESOURCE_ALREADY_EXISTS" {
-			return errmsg, errors.New("订单已经支付，请勿重复扣款!")
+			return errmsg, errors.New(fmt.Sprintf("订单已经支付，请勿重复扣款!response:%+v", rqs))
 		} else if errmsg.Code == "PARAM_ERROR" {
-			return errmsg, errors.New("参数错误，请检查参数!")
+			return errmsg, errors.New(fmt.Sprintf("参数错误，请检查参数!response:%+v", rqs))
 		} else if errmsg.Code == "SYSTEM_ERROR" {
-			return errmsg, errors.New("系统错误，请稍后重试!")
+			return errmsg, errors.New(fmt.Sprintf("系统错误，请稍后重试!response:%+v", rqs))
 		} else {
-			return errmsg, errors.New(fmt.Sprintf("系统异常:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("系统异常!response:%+v", rqs))
 		}
 	}
 	return result, nil

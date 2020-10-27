@@ -100,3 +100,35 @@ func (this *Client) UpdateUserInfo(param UpdateUserInfo) error {
 		return nil
 	}
 }
+
+func (this *Client) QueryContracts(param QueryContracts) (RespQueryContracts, error) {
+	result := RespQueryContracts{}
+	if param.Contract_id == "" {
+		return result, errors.New("签约ID不能为空！")
+	}
+	if param.Appid == "" {
+		return result, errors.New("APPID不能为空！")
+	}
+
+	rqs, err := this.doRequest(param, &result)
+	if err != nil {
+		return result, err
+	}
+	if strings.Contains(rqs, "code") {
+		errmsg := SysError{}
+
+		err = json.Unmarshal([]byte(rqs), &errmsg)
+		if err != nil {
+			return result, err
+		}
+		fmt.Println(fmt.Sprintf("%+v", errmsg))
+		if errmsg.Code == "SYSTEM_ERROR" {
+			return result, errors.New("查询签约信息失败!")
+		} else if errmsg.Code == "SIGN_ERROR" {
+			return result, errors.New("系统错误，签名失败!")
+		} else {
+			return result, nil
+		}
+	}
+	return result, nil
+}

@@ -52,6 +52,7 @@ type RespQueryUserInfo struct {
 	Status          string       `json:"status"`          //用户状态 NOMAL：正常状态 DISABLED：禁用状态，此时支付被限制
 	Contract_state  string       `json:"contract_state"`  //签约状态
 	Face_image_ok   bool         `josn:"face_image_ok"`   //人脸图片上传状态
+	Contract_id     string       `json:"contract_id"`     //签约ID
 }
 
 type Student_Info struct {
@@ -100,4 +101,44 @@ func (this UpdateUserInfo) RawJsonStr() string {
 		return "Error"
 	}
 	return string(jsons)
+}
+
+type QueryContracts struct {
+	Contract_id string `json:"contract_id"`
+	Appid       string `json:"appid"`
+}
+
+// APIUrl QueryUserInfo APIURL
+func (this QueryContracts) APIUrl() string {
+	return fmt.Sprintf("/v3/offlineface/contracts/%s?appid=%s", this.Contract_id, this.Appid)
+}
+
+// Method QueryUserInfo Method
+func (this QueryContracts) Method() string {
+	return "GET"
+}
+
+// Params QueryUserInfo Params
+func (this QueryContracts) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+// RawJsonStr QueryUserInfo RawJsonStr
+func (this QueryContracts) RawJsonStr() string {
+	return ""
+}
+
+type RespQueryContracts struct {
+	Contract_id              string `json:"contract_id"`              //签约ID
+	Mchid                    string `json:"mchid"`                    //商户号
+	Organization_id          string `json:"organization_id"`          //机构ID
+	User_id                  string `json:"user_id"`                  //用户ID
+	Openid                   string `json:"openid"`                   //签约用户openid
+	Contract_state           string `json:"contract_state"`           //签约状态
+	Contract_signed_time     string `json:"contract_signed_time"`     //签约时间
+	Contract_terminated_time string `json:"contract_terminated_time"` //解约时间
+	Contract_mode            string `json:"contract_mode"`            //签约模式 LIMIT_BANK_CARD：指定卡签约；PRIORITY_BANK_CARD：优先卡签约；LIMIT_NONE：任意卡签约
+	Contract_bank_card_from  string `josn:"contract_bank_card_from"`  //签约卡来源 MERCHANT_LIMITED_BANK_CARD：商户指定的签约卡；USER_SELECT_FREE：用户选择的签约卡
+
 }

@@ -1,8 +1,10 @@
 package wxpayv3
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 // CancelRequest 主动解约
@@ -18,7 +20,14 @@ func (this *Client) CancelRequest(param CancelRequest) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	if strings.Contains(rqs, "code") {
+		errmsg := SysError{}
+		err = json.Unmarshal([]byte(rqs), &errmsg)
+		if err != nil {
+			return false, err
+		}
+		return false, errors.New(fmt.Sprintf("申请代扣解约失败,ERR:%+v", errmsg))
+	}
 	fmt.Println(rqs)
-
 	return true, nil
 }

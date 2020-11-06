@@ -151,11 +151,11 @@ func (this *Client) doRequest(param Param, result interface{}) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			err = json.Unmarshal(data, &result)
-			if err != nil {
-				return "", errors.New("Result解析失败")
-			}
-			fmt.Println(string(data))
+			//err = json.Unmarshal(data, &result)
+			//if err != nil {
+			//	return "", errors.New("Result解析失败")
+			//}
+			//fmt.Println(string(data))
 			return string(data), nil
 			//return resp.Status, errors.New(fmt.Sprintf("请求失败，错误码:%d", resp.StatusCode))
 		}

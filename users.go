@@ -101,6 +101,7 @@ func (this *Client) UpdateUserInfo(param UpdateUserInfo) error {
 	}
 }
 
+// QueryContracts 查询签约信息
 func (this *Client) QueryContracts(param QueryContracts) (RespQueryContracts, error) {
 	result := RespQueryContracts{}
 	if param.Contract_id == "" {

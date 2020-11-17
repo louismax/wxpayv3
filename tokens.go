@@ -63,12 +63,13 @@ func (this *Client) GetPresign_Token(param Presign_Token) (RespPresign_Token, er
 	if param.Facepay_user.Phone == "" {
 		return result, errors.New("手机号码不能为空！")
 	}
-	if param.Facepay_user.Identification.Identification_type == "" {
-		return result, errors.New("刷脸用户证件类型不能为空！")
-	}
-	if param.Facepay_user.Identification.Identification_number == "" {
-		return result, errors.New("刷脸用户证件号码不能为空！")
-	}
+	//Louis 2020年11月17日17:04:08 用户证件非必传
+	//if param.Facepay_user.Identification.Identification_type == "" {
+	//	return result, errors.New("刷脸用户证件类型不能为空！")
+	//}
+	//if param.Facepay_user.Identification.Identification_number == "" {
+	//	return result, errors.New("刷脸用户证件号码不能为空！")
+	//}
 	if param.Limit_bank_card.Bank_card_number == "" {
 		return result, errors.New("银行卡号不能为空！")
 	}

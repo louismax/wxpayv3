@@ -129,8 +129,10 @@ func (this *Client) GetPresign_Token(param Presign_Token) (RespPresign_Token, er
 			return result, errors.New("获取预签约会话失败!")
 		} else if errmsg.Code == "SIGN_ERROR" {
 			return result, errors.New("系统错误，签名失败!")
+		} else if errmsg.Code == "PARAM_ERROR" {
+			return result, errors.New("系统错误，请求的参数错误!")
 		} else {
-			return result, nil
+			return result, errors.New(fmt.Sprintf("系统错误:resp：%+v!", errmsg))
 		}
 	}
 	return result, nil

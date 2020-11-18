@@ -95,10 +95,10 @@ func (this *Client) GetPresign_Token(param Presign_Token) (RespPresign_Token, er
 	if err != nil {
 		return result, errors.New("手机号码加密错误！")
 	}
-	param.Facepay_user.Identification.Identification_number, err = this.RsaOAEPEncrypt(param.Facepay_user.Identification.Identification_number)
-	if err != nil {
-		return result, errors.New("刷脸用户证件号码加密错误！")
-	}
+	//param.Facepay_user.Identification.Identification_number, err = this.RsaOAEPEncrypt(param.Facepay_user.Identification.Identification_number)
+	//if err != nil {
+	//	return result, errors.New("刷脸用户证件号码加密错误！")
+	//}
 	param.Limit_bank_card.Bank_card_number, err = this.RsaOAEPEncrypt(param.Limit_bank_card.Bank_card_number)
 	if err != nil {
 		return result, errors.New("银行卡号加密错误！")

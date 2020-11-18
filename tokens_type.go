@@ -54,7 +54,7 @@ type Facepay_user struct {
 	Out_user_id         string         `json:"out_user_id"`
 	Identification_name string         `json:"identification_name"`
 	Organization_id     string         `json:"organization_id"`
-	Identification      Identification `json:"identification"`
+	//Identification      Identification `json:"identification"`
 	Phone               string         `json:"phone"`
 }
 

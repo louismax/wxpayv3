@@ -167,7 +167,7 @@ func (c *OldClient) processResponseXml(xmlStr string) (Params, error) {
 	if params.ContainsKey("return_code") {
 		returnCode = params.GetString("return_code")
 	} else {
-		return nil, errors.New("no return_code in XML")
+		return nil, errors.New(fmt.Sprint("no return_code in XML,body:%+v",xmlStr))
 	}
 	if returnCode == Fail {
 		return params, nil
@@ -175,10 +175,10 @@ func (c *OldClient) processResponseXml(xmlStr string) (Params, error) {
 		if c.ValidSign(params) {
 			return params, nil
 		} else {
-			return nil, errors.New("invalid sign value in XML")
+			return nil, errors.New(fmt.Sprint("invalid sign value in XML,body:%+v",xmlStr))
 		}
 	} else {
-		return nil, errors.New("return_code value is invalid in XML")
+		return nil, errors.New(fmt.Sprint("return_code value is invalid in XML,body:%+v",xmlStr))
 	}
 }
 

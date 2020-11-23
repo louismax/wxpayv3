@@ -30,8 +30,8 @@ func TestClient_GetPresign_Token(t *testing.T) {
 			param.Facepay_user.Out_user_id = ""                                 //商户侧userid
 			param.Facepay_user.Identification_name = ""                         //姓名
 			param.Facepay_user.Organization_id = ""                             //所属学校机构id
-			param.Facepay_user.Identification.Identification_type = "IDCARD"    //固定值，必须身份证
-			param.Facepay_user.Identification.Identification_number = ""        //身份证号
+			//param.Facepay_user.Identification.Identification_type = "IDCARD"    //固定值，必须身份证
+			//param.Facepay_user.Identification.Identification_number = ""        //身份证号
 			param.Facepay_user.Phone = ""                                       //手机号
 			param.Limit_bank_card.Bank_card_number = ""                         //银行卡号
 			param.Limit_bank_card.Identification_name = ""                      //开卡人姓名

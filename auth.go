@@ -72,7 +72,7 @@ func (c *OldClient) GetAuthInfo(params Params) (Params, error) {
 
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(fmt.Sprint("Err:%+v,body:%+v",err,xmlStr))
 	}
 	return c.processResponseXml(xmlStr)
 }

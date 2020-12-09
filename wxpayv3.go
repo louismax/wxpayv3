@@ -167,7 +167,7 @@ func (this *Client) doRequest(param Param, result interface{}) (string, error) {
 		//fmt.Println("http_body:", string(data))
 		err = json.Unmarshal(data, &result)
 		if err != nil {
-			return "", errors.New("Result解析失败")
+			return "", errors.New(fmt.Sprintf("Result解析失败:%+v", err))
 		}
 		return string(data), nil
 	}

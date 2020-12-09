@@ -72,7 +72,7 @@ func (c *OldClient) GetAuthInfo(params Params) (Params, error) {
 
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
-		return nil, errors.New(fmt.Sprint("Err:%+v,body:%+v",err,xmlStr))
+		return nil, errors.New(fmt.Sprintf("Err:%+v,body:%+v",err,xmlStr))
 	}
 	return c.processResponseXml(xmlStr)
 }
@@ -167,7 +167,7 @@ func (c *OldClient) processResponseXml(xmlStr string) (Params, error) {
 	if params.ContainsKey("return_code") {
 		returnCode = params.GetString("return_code")
 	} else {
-		return nil, errors.New(fmt.Sprint("no return_code in XML,body:%+v",xmlStr))
+		return nil, errors.New(fmt.Sprintf("no return_code in XML,body:%+v",xmlStr))
 	}
 	if returnCode == Fail {
 		return params, nil
@@ -175,10 +175,10 @@ func (c *OldClient) processResponseXml(xmlStr string) (Params, error) {
 		if c.ValidSign(params) {
 			return params, nil
 		} else {
-			return nil, errors.New(fmt.Sprint("invalid sign value in XML,body:%+v",xmlStr))
+			return nil, errors.New(fmt.Sprintf("invalid sign value in XML,body:%+v",xmlStr))
 		}
 	} else {
-		return nil, errors.New(fmt.Sprint("return_code value is invalid in XML,body:%+v",xmlStr))
+		return nil, errors.New(fmt.Sprintf("return_code value is invalid in XML,body:%+v",xmlStr))
 	}
 }
 

@@ -14,3 +14,5 @@
 apiclient_cert.pem
 apiclient_key.pem
 *.bak
+pay_test_local.go
+users_test_bak.go

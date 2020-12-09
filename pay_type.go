@@ -6,11 +6,26 @@ import (
 )
 
 const (
-	Business_scene_type_K12         = 2 //K12项目
+	Business_scene_type_K12 = 2  //K12项目
+	Business_scene_type_QY  = 11 //企业团餐
+
 	Business_scene_type_Mess        = 3 //食堂场景
 	Business_scene_type_Supermarket = 4 //超市场景
 	Business_scene_type_Infirmary   = 5 //校医院
 	Business_scene_type_Dev         = 6 //测试场景
+
+	Business_scene_type_K12Test = 6 //团餐测试
+	Business_scene_type_QYBus   = 6 //企业食堂
+	Business_scene_type_TXBus   = 6 //腾讯食堂
+
+)
+
+const (
+	AUTH      = "AUTH"
+	NOT_DEBT  = "NOT_DEBT"  //无垫资
+	DEBT      = "DEBT"      //垫资支付
+	REPAYMENT = "REPAYMENT" //已还款
+	CNY       = "CNY"
 )
 
 type ReqCreatePayCredential struct {
@@ -129,4 +144,114 @@ type CorePaymentInfo struct {
 		Amount   int64  `json:"amount"`   //支付金额
 		Currency string `json:"currency"` //支付币种
 	} `json:"core_payment_info"`
+}
+
+//ReqTransactions K12查单
+type ReqTransactions struct {
+	Out_Trade_No        string `json:"out_trade_no"`
+	Sp_Mchid            string `json:"sp_mchid"`
+	Sub_Mchid           string `json:"sub_mchid"`
+	Business_Product_ID int    `json:"business_product_id"`
+}
+
+// APIUrl ReqTransactions APIURL
+func (this ReqTransactions) APIUrl() string {
+	return fmt.Sprintf("/v3/offlineface/transactions/out-trade-no/%s?sp_mchid=%s&sub_mchid=%s&business_product_id=%d", this.Out_Trade_No, this.Sp_Mchid, this.Sub_Mchid, this.Business_Product_ID)
+}
+
+// Method ReqTransactions Method
+func (this ReqTransactions) Method() string {
+	return "GET"
+}
+
+// Params ReqTransactions Params
+func (this ReqTransactions) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+func (this ReqTransactions) RawJsonStr() string {
+	return ""
+}
+
+type ReqTransactionDeduction struct {
+	AuthCode string `json:"auth_code"` //支付凭证
+	SpAppid  string `json:"sp_appid"`
+	SubAppid string `json:"sub_appid"`
+	SpMchid  string `json:"sp_mchid"`  //商户号
+	SubMchid string `json:"sub_mchid"` //子商户号
+	Amount   struct {
+		Total    int64  `json:"total"`    //总金额
+		Currency string `json:"currency"` //货币类型
+	} `json:"amount"` //金额信息
+	SceneInfo struct {
+		DeviceIp string `json:"device_ip"` //设备IP
+	} `json:"scene_info"` //支付场景信息
+	GoodsTag    string `json:"goods_tag"`   //优惠标记
+	Description string `json:"description"` //商品信息
+	Attach      string `json:"attach"`      //商户附加信息
+	SettleInfo  struct {
+		ProfitSharing bool `json:"profit_sharing"` //是否支持分账
+	} `json:"settle_info"` //结算信息
+	OutTradeNo string `json:"out_trade_no"` // 商户单号
+	Business   struct {
+		BusinessProductId int `json:"business_product_id"` //平台产品ID
+		BusinessSceneId   int `json:"business_scene_id"`   //平台场景ID
+	} `json:"business"` //业务信息
+}
+
+// APIUrl ReqTransactionDeduction APIURL
+func (this ReqTransactionDeduction) APIUrl() string {
+	return "/v3/offlineface/transactions"
+}
+
+// Method ReqTransactionDeduction Method
+func (this ReqTransactionDeduction) Method() string {
+	return "POST"
+}
+
+// Params ReqTransactionDeduction Params
+func (this ReqTransactionDeduction) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+func (this ReqTransactionDeduction) RawJsonStr() string {
+	jsons, errs := json.Marshal(this)
+	if errs != nil {
+		fmt.Println(errs.Error())
+		return "Error"
+	}
+	return string(jsons)
+}
+
+type RespTransactionDeduction struct {
+	SpAppid  string `json:"sp_appid"`
+	SubAppid string `json:"sub_appid"`
+	SpMchid  string `json:"sp_mchid"`  //商户号
+	SubMchid string `json:"sub_mchid"` //子商户号
+	Payer    struct {
+		SPOpenid  string `json:"sp_openid"`  //公众号下的openid
+		SubOpenid string `json:"sub_openid"` //子公众号下的openid
+	} `json:"payer"`
+	Amount struct {
+		Total       int64  `json:"total"`        //订单金额
+		PayTotal    int64  `json:"pay_total"`    //用户支付金额
+		Currency    string `json:"currency"`     //货币类型
+		PayCurrency string `json:"pay_currency"` //用户支付货币类型
+	} `json:"amount"`
+	PromotionDetail []PromotionList `json:"promotion_detail"` //优惠信息
+	SceneInfo       struct {
+		DeviceIp string `json:"device_ip"` //设备IP
+	} `json:"scene_info"` //支付场景信息
+	BankType               string `json:"bank_type"`                //付款银行
+	TradeType              string `json:"trade_type"`               //交易类型
+	TradeStateDescription  string `json:"trade_state_description"`  //交易描述
+	DebtState              string `json:"debt_state"`               //欠款状态
+	Description            string `json:"description"`              //商品信息
+	Attach                 string `json:"attach"`                   //商户附加信息
+	SuccessTime            string `json:"success_time"`             //支付成功时间
+	TransactionId          string `json:"transaction_id"`           //微信订单号
+	RepaymentTransactionId string `json:"repayment_transaction_id"` //还款微信单号
+	OutTradeNo             string `json:"out_trade_no"`             //商户单号
 }

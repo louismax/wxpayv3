@@ -48,14 +48,15 @@ type Presign_Token struct {
 	Business_name   string        `json:"business_name"`   //业务类型
 	Facepay_user    Facepay_user  `json:"facepay_user"`    //刷脸用户信息
 	Limit_bank_card LimitBankCard `json:"limit_bank_card"` //签约银行卡信息
+	Contract_mode   string        `json:"contract_mode"`   //签约模式 LIMIT_BANK_CARD：指定卡签约；PRIORITY_BANK_CARD：优先卡签约；LIMIT_NONE：任意卡签约
 }
 
 type Facepay_user struct {
-	Out_user_id         string         `json:"out_user_id"`
-	Identification_name string         `json:"identification_name"`
-	Organization_id     string         `json:"organization_id"`
+	Out_user_id         string `json:"out_user_id"`
+	Identification_name string `json:"identification_name"`
+	Organization_id     string `json:"organization_id"`
 	//Identification      Identification `json:"identification"`
-	Phone               string         `json:"phone"`
+	Phone string `json:"phone"`
 }
 
 type Identification struct {

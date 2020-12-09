@@ -46,6 +46,7 @@ func (this *Client) GetTokens(userid, wxogid string) (RespGetTokens, error) {
 	return result, nil
 }
 
+// GetPresign_Token 小程序预签约
 func (this *Client) GetPresign_Token(param Presign_Token) (RespPresign_Token, error) {
 	result := RespPresign_Token{}
 	if param.Business_name == "" {
@@ -110,6 +111,10 @@ func (this *Client) GetPresign_Token(param Presign_Token) (RespPresign_Token, er
 	param.Limit_bank_card.Identification.Identification_number, err = this.RsaOAEPEncrypt(param.Limit_bank_card.Identification.Identification_number)
 	if err != nil {
 		return result, errors.New("开户人证件号码加密错误！")
+	}
+
+	if param.Contract_mode == "" {
+		param.Contract_mode = "LIMIT_BANK_CARD"
 	}
 
 	rqs, err := this.doRequest(param, &result)

@@ -14,9 +14,9 @@ const (
 	Business_scene_type_Infirmary   = 5 //校医院
 	Business_scene_type_Dev         = 6 //测试场景
 
-	Business_scene_type_K12Test = 6 //团餐测试
-	Business_scene_type_QYBus   = 6 //企业食堂
-	Business_scene_type_TXBus   = 6 //腾讯食堂
+	Business_scene_type_K12Test = 124 //团餐测试
+	Business_scene_type_QYBus   = 125 //企业食堂
+	Business_scene_type_TXBus   = 126 //腾讯食堂
 
 )
 

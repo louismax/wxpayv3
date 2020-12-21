@@ -133,3 +133,19 @@ func (this *Client) QueryContracts(param QueryContracts) (RespQueryContracts, er
 	}
 	return result, nil
 }
+
+// QueryHeavyWeight 查询重采列表
+func (this *Client) QueryHeavyWeight(param QueryHeavyWeight) (RespQueryContracts, error) {
+	result := RespQueryContracts{}
+	if param.Organization_id == "" {
+		return result, errors.New("机构ID不能为空！")
+	}
+
+	rqs, err := this.doRequest(param, &result)
+	if err != nil {
+		return result, err
+	}
+	fmt.Println(rqs)
+
+	return result, nil
+}

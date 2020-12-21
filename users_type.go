@@ -142,3 +142,28 @@ type RespQueryContracts struct {
 	Contract_bank_card_from  string `josn:"contract_bank_card_from"`  //签约卡来源 MERCHANT_LIMITED_BANK_CARD：商户指定的签约卡；USER_SELECT_FREE：用户选择的签约卡
 
 }
+
+type QueryHeavyWeight struct {
+	Organization_id string `json:"organization_id"` //机构ID
+}
+
+// APIUrl QueryHeavyWeight APIURL
+func (this QueryHeavyWeight) APIUrl() string {
+	return fmt.Sprintf("/v3/offlineface/face-collections?organization_id=%s&offset=0&limit=20", this.Organization_id)
+}
+
+// Method QueryHeavyWeight Method
+func (this QueryHeavyWeight) Method() string {
+	return "GET"
+}
+
+// Params QueryHeavyWeight Params
+func (this QueryHeavyWeight) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+// RawJsonStr QueryHeavyWeight RawJsonStr
+func (this QueryHeavyWeight) RawJsonStr() string {
+	return ""
+}

@@ -16,3 +16,9 @@ apiclient_key.pem
 *.bak
 pay_test_local.go
 users_test_bak.go
+1603541829_cert.pem
+1603541829_key.pem
+applysubject_test_local.go
+cert_test_local.go
+Public_test_local.go
+微信图片_20201028105758.png

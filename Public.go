@@ -125,7 +125,7 @@ func (this *Client) UploadImage(filePath string) (interface{}, error) {
 
 	if strings.Contains(string(data), "code") {
 		errmsg := SysError{}
-		err = json.Unmarshal([]byte(data), &errmsg)
+		err = json.Unmarshal(data, &errmsg)
 		if err != nil {
 			return nil, err
 		}

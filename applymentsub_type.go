@@ -176,7 +176,7 @@ func (this ReqGetStatusRepairOrderForBusCode) RawJsonStr() string {
 }
 
 type ReqGetStatusRepairOrderForApplyCode struct {
-	ApplymentId string `json:"applyment_id"`
+	ApplymentId int64 `json:"applyment_id"`
 }
 
 // APIUrl ReqGetStatusRepairOrderForApplyCode APIURL

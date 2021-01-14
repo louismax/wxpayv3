@@ -209,7 +209,7 @@ func (this *Client) GetStatusRepairOrderForBusCode(param ReqGetStatusRepairOrder
 
 //GetStatusRepairOrderForApplyCode 微信申请单号获取申请单信息
 func (this *Client) GetStatusRepairOrderForApplyCode(param ReqGetStatusRepairOrderForApplyCode) (interface{}, error) {
-	if param.ApplymentId == "" {
+	if param.ApplymentId == 0 {
 		return nil, errors.New("微信申请单号不能为空！")
 	}
 

@@ -109,13 +109,13 @@ func TestClient_GetStatusRepairOrderForApplyCode(t *testing.T) {
 }
 
 func TestClient_GetStatusRepairOrderForBusCode(t *testing.T) {
-	client, err := New("", "", "apiclient_key.pem", "apiclient_cert.pem")
+	client, err := New("1501889641", "1433BE83CE5A9D6022972F4B144A714C598CFADF", "apiclient_key.pem", "apiclient_cert.pem")
 	if err != nil {
 		t.Log(fmt.Sprintf("V3客户端初始化失败,err:%+v", err))
 		return
 	}
 	param := ReqGetStatusRepairOrderForBusCode{
-		BusinessCode: "",
+		BusinessCode: "3a846fdca4e59c3e36bbde799bd04526",
 	}
 	res, err := client.GetStatusRepairOrderForBusCode(param)
 	if err != nil {

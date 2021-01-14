@@ -181,7 +181,7 @@ type ReqGetStatusRepairOrderForApplyCode struct {
 
 // APIUrl ReqGetStatusRepairOrderForApplyCode APIURL
 func (this ReqGetStatusRepairOrderForApplyCode) APIUrl() string {
-	return fmt.Sprintf("/v3/applyment4sub/applyment/applyment_id/%s", this.ApplymentId)
+	return fmt.Sprintf("/v3/applyment4sub/applyment/applyment_id/%d", this.ApplymentId)
 }
 
 // Method ReqGetStatusRepairOrderForApplyCode Method

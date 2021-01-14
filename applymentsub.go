@@ -129,49 +129,48 @@ func (this *Client) MerchantsIntoPieces(param ReqMerchantsIntoPieces) (interface
 		return nil, errors.New("银行账号无效")
 	}
 
-	//var err error
-	//param.ContactInfo.ContactName, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactName)
-	//if err != nil {
-	//	return nil, errors.New("用户姓名加密错误！")
-	//}
-	//if param.ContactInfo.ContactIdNumber != "" {
-	//	param.ContactInfo.ContactIdNumber, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactIdNumber)
-	//	if err != nil {
-	//		return nil, errors.New("身份证信息加密错误！")
-	//	}
-	//}
-	//if param.ContactInfo.Openid != "" {
-	//	param.ContactInfo.Openid, err = this.RsaOAEPEncrypt(param.ContactInfo.Openid)
-	//	if err != nil {
-	//		return nil, errors.New("Openid加密错误！")
-	//	}
-	//}
-	//param.ContactInfo.MobilePhone, err = this.RsaOAEPEncrypt(param.ContactInfo.MobilePhone)
-	//if err != nil {
-	//	return nil, errors.New("联系手机加密错误！")
-	//}
-	//if param.ContactInfo.ContactEmail != "" {
-	//	param.ContactInfo.ContactEmail, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactEmail)
-	//	if err != nil {
-	//		return nil, errors.New("联系邮箱加密错误！")
-	//	}
-	//}
-	//param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardName, err = this.RsaOAEPEncrypt(param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardName)
-	//if err != nil {
-	//	return nil, errors.New("经营者身份证姓名加密错误！")
-	//}
-	//param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardNumber, err = this.RsaOAEPEncrypt(param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardNumber)
-	//if err != nil {
-	//	return nil, errors.New("经营者身份证号码加密错误！")
-	//}
-	//param.BankAccountInfo.AccountName, err = this.RsaOAEPEncrypt(param.BankAccountInfo.AccountName)
-	//if err != nil {
-	//	return nil, errors.New("收款银行卡开户名称加密错误！")
-	//}
-	//param.BankAccountInfo.AccountNumber, err = this.RsaOAEPEncrypt(param.BankAccountInfo.AccountNumber)
-	//if err != nil {
-	//	return nil, errors.New("收款银行卡号码加密错误！")
-	//}
+	var err error
+	param.ContactInfo.ContactName, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactName)
+	if err != nil {
+		return nil, errors.New("用户姓名加密错误！")
+	}
+	if param.ContactInfo.ContactIdNumber != "" {
+		param.ContactInfo.ContactIdNumber, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactIdNumber)
+		if err != nil {
+			return nil, errors.New("身份证信息加密错误！")
+		}
+	}
+	if param.ContactInfo.Openid != "" {
+		param.ContactInfo.Openid, err = this.RsaOAEPEncrypt(param.ContactInfo.Openid)
+		if err != nil {
+			return nil, errors.New("Openid加密错误！")
+		}
+	}
+	param.ContactInfo.MobilePhone, err = this.RsaOAEPEncrypt(param.ContactInfo.MobilePhone)
+	if err != nil {
+		return nil, errors.New("联系手机加密错误！")
+	}
+	if param.ContactInfo.ContactEmail != "" {
+		param.ContactInfo.ContactEmail, err = this.RsaOAEPEncrypt(param.ContactInfo.ContactEmail)
+		if err != nil {
+			return nil, errors.New("联系邮箱加密错误！")
+		}
+	}
+	param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardName = param.ContactInfo.ContactName
+
+	if param.ContactInfo.ContactIdNumber != "" {
+		param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardNumber = param.ContactInfo.ContactIdNumber
+	} else {
+		param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardNumber, err = this.RsaOAEPEncrypt(param.SubjectInfo.IdentityInfo.IdCardInfo.IdCardNumber)
+		if err != nil {
+			return nil, errors.New("经营者身份证号码加密错误！")
+		}
+	}
+	param.BankAccountInfo.AccountName = param.ContactInfo.ContactName
+	param.BankAccountInfo.AccountNumber, err = this.RsaOAEPEncrypt(param.BankAccountInfo.AccountNumber)
+	if err != nil {
+		return nil, errors.New("收款银行卡号码加密错误！")
+	}
 
 	result := RespMerchantsIntoPieces{}
 	rqs, err := this.doRequest(param, &result)

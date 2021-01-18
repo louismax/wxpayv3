@@ -215,3 +215,37 @@ type AuditDetail struct {
 	FieldName    string `json:"field_name"`
 	RejectReason string `json:"reject_reason"`
 }
+
+type ReqQuerySubMerchants struct {
+	SubMchid string `json:"sub_mchid"`
+}
+
+// APIUrl ReqQuerySubMerchants APIURL
+func (this ReqQuerySubMerchants) APIUrl() string {
+	return fmt.Sprintf("/v3/apply4sub/sub_merchants/%s/settlement", this.SubMchid)
+}
+
+// Method ReqQuerySubMerchants Method
+func (this ReqQuerySubMerchants) Method() string {
+	return "GET"
+}
+
+// Params ReqQuerySubMerchants Params
+func (this ReqQuerySubMerchants) Params() map[string]string {
+	var m = make(map[string]string)
+	return m
+}
+
+// RawJsonStr ReqQuerySubMerchants RawJsonStr
+func (this ReqQuerySubMerchants) RawJsonStr() string {
+	return ""
+}
+
+type RespQuerySubMerchants struct {
+	AccountType   string `json:"account_type"`
+	AccountBank   string `json:"account_bank"`
+	BankName      string `json:"bank_name"`
+	BankBranchId  string `json:"bank_branch_id"`
+	AccountNumber string `json:"account_number"`
+	VerifyResult  string `json:"verify_result"`
+}

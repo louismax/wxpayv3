@@ -222,3 +222,28 @@ func (this *Client) GetStatusRepairOrderForApplyCode(param ReqGetStatusRepairOrd
 
 	return result, nil
 }
+
+//QuerySubMerchants 查询结算商户
+func (this *Client) QuerySubMerchants(param ReqQuerySubMerchants) (interface{}, error) {
+	if param.SubMchid == "" {
+		return nil, errors.New("子商户号不能为空！")
+	}
+
+	result := RespQuerySubMerchants{}
+	rqs, err := this.doRequest(param, &result)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(fmt.Sprintf("原始返回参数:%+v", rqs))
+
+	if strings.Contains(rqs, "code") {
+		errmsg := SysError{}
+		err = json.Unmarshal([]byte(rqs), &errmsg)
+		if err != nil {
+			return nil, err
+		}
+		return errmsg, errors.New("Fail")
+	} else {
+		return result, nil
+	}
+}

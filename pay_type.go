@@ -246,6 +246,7 @@ type RespTransactionDeduction struct {
 	} `json:"scene_info"` //支付场景信息
 	BankType               string `json:"bank_type"`                //付款银行
 	TradeType              string `json:"trade_type"`               //交易类型
+	TradeState             string `json:"trade_state"`              //交易状态
 	TradeStateDescription  string `json:"trade_state_description"`  //交易描述
 	DebtState              string `json:"debt_state"`               //欠款状态
 	Description            string `json:"description"`              //商品信息

@@ -226,17 +226,17 @@ func (this *Client) TransactionDeduction(param ReqTransactionDeduction) (interfa
 			return nil, err
 		}
 		if errmsg.Code == "ORDER_CLOSED" {
-			return errmsg, errors.New(fmt.Sprintf("当前订单已经关闭，请换单号继续扣款:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("当前订单已经关闭,请换单号继续扣款,原始返回:%s", rqs))
 		} else if errmsg.Code == "RESOURCE_ALREADY_EXISTS" {
-			return errmsg, errors.New(fmt.Sprintf("订单已经支付，请勿重复扣款:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("订单已经支付,请勿重复扣款,原始返回:%s", rqs))
 		} else if errmsg.Code == "PARAM_ERROR" {
-			return errmsg, errors.New(fmt.Sprintf("参数错误:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("参数错误,原始返回:%s", rqs))
 		} else if errmsg.Code == "INVALID_REQUEST" {
-			return errmsg, errors.New(fmt.Sprintf("凭证失效:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("凭证失效,原始返回:%s", rqs))
 		} else if errmsg.Code == "SYSTEM_ERROR" {
-			return errmsg, errors.New(fmt.Sprintf("系统错误:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("系统错误,原始返回:%s", rqs))
 		} else {
-			return errmsg, errors.New(fmt.Sprintf("未知异常:%+v", rqs))
+			return errmsg, errors.New(fmt.Sprintf("未知异常,原始返回:%s", rqs))
 		}
 	}
 	return result, nil

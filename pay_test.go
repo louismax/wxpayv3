@@ -88,6 +88,7 @@ func TestClient_TransactionDeduction(t *testing.T) {
 			BusinessSceneId   int `json:"business_scene_id"`
 		}{},
 	}
+
 	param.Amount.Total = 1
 	param.Amount.Currency = "CNY"
 	param.SceneInfo.DeviceIp = "127.0.0.1"

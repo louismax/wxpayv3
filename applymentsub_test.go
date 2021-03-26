@@ -91,13 +91,13 @@ func TestClient_MerchantsIntoPieces(t *testing.T) {
 }
 
 func TestClient_GetStatusRepairOrderForApplyCode(t *testing.T) {
-	client, err := New("", "", "apiclient_key.pem", "apiclient_cert.pem")
+	client, err := New("1501889641", "1433BE83CE5A9D6022972F4B144A714C598CFADF", "apiclient_key.pem", "apiclient_cert.pem")
 	if err != nil {
 		t.Log(fmt.Sprintf("V3客户端初始化失败,err:%+v", err))
 		return
 	}
 	param := ReqGetStatusRepairOrderForApplyCode{
-		ApplymentId: 0,
+		ApplymentId: 2000002177161108,
 	}
 	res, err := client.GetStatusRepairOrderForApplyCode(param)
 	if err != nil {
@@ -127,13 +127,28 @@ func TestClient_GetStatusRepairOrderForBusCode(t *testing.T) {
 }
 
 func TestClient_QuerySubMerchants(t *testing.T) {
-	client, err := New("", "", "apiclient_key.pem", "apiclient_cert.pem")
+	//client, err := New("", "", "apiclient_key.pem", "apiclient_cert.pem")
+	//if err != nil {
+	//	t.Log(fmt.Sprintf("V3客户端初始化失败,err:%+v", err))
+	//	return
+	//}
+	//param := ReqQuerySubMerchants{
+	//	SubMchid: "",
+	//}
+	//res, err := client.QuerySubMerchants(param)
+	//if err != nil {
+	//	t.Log(fmt.Sprintf("RESP:%+v", res))
+	//	t.Log(fmt.Sprintf("失败,err:%+v", err))
+	//	return
+	//}
+	//t.Log(fmt.Sprintf("result:%+v", res))
+	client, err := New("1501889641", "1433BE83CE5A9D6022972F4B144A714C598CFADF", "apiclient_key.pem", "apiclient_cert.pem")
 	if err != nil {
 		t.Log(fmt.Sprintf("V3客户端初始化失败,err:%+v", err))
 		return
 	}
 	param := ReqQuerySubMerchants{
-		SubMchid: "",
+		SubMchid: "1573631351",
 	}
 	res, err := client.QuerySubMerchants(param)
 	if err != nil {

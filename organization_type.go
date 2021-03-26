@@ -44,7 +44,7 @@ type QueryOrganization struct {
 
 // APIUrl QueryOrganization APIURL
 func (this QueryOrganization) APIUrl() string {
-	return "/v3/offlinefacemch/organizations"
+	return fmt.Sprintf("/v3/offlinefacemch/organizations?organization_id=%s", this.Organization_id)
 }
 
 // Method QueryOrganization Method
@@ -55,7 +55,7 @@ func (this QueryOrganization) Method() string {
 // Params QueryOrganization Params
 func (this QueryOrganization) Params() map[string]string {
 	var m = make(map[string]string)
-	m["Organization_id"] = this.Organization_id
+	//m["Organization_id"] = this.Organization_id
 	return m
 }
 

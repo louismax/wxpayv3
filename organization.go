@@ -61,8 +61,10 @@ func (this *Client) QueryOrganization(param QueryOrganization) (RespQueryOrganiz
 			return result, errors.New("新建机构失败，请检查是否重名!")
 		} else if errmsg.Code == "SIGN_ERROR" {
 			return result, errors.New("系统错误，签名失败!")
+		} else if errmsg.Code == "INVALID_REQUEST" {
+			return result, errors.New(errmsg.Message)
 		} else {
-			return result, nil
+			return result, errors.New(fmt.Sprintf("未知错误,原始返回：%+v", rqs))
 		}
 	}
 

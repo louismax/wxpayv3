@@ -155,20 +155,22 @@ func (this *Client) Transactions(param ReqTransactions) (interface{}, error) {
 	//	param.Business_Product_ID = "K12"
 	//}
 	param.Business_Product_ID = 2
-	rqs, err := this.doRequest(param, nil)
+	result := RespTransactionDeduction{}
+	rqs, err := this.doRequest(param, &result)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(rqs)
+	//fmt.Println(rqs)
 	if strings.Contains(rqs, "code") {
 		errmsg := SysError{}
 		err = json.Unmarshal([]byte(rqs), &errmsg)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(fmt.Sprintf("%+v", errmsg))
+		//fmt.Println(fmt.Sprintf("%+v", errmsg))
+		return errmsg, errors.New(rqs)
 	}
-	return nil, nil
+	return result, nil
 }
 
 //TransactionDeduction 申请扣款(新版、支持分账)

@@ -1,32 +1,38 @@
 package wxpayv3
 
 import (
-	"context"
 	"fmt"
+	"github.com/louismax/wxpayv3/constant"
 	"github.com/louismax/wxpayv3/core"
+	"net/http"
 )
 
-//type ClientConfig struct {
-//	MchId      string //商户号
-//	ApiV3Key   string
-//	ApiCert    *core.ApiCert //商户证书
-//	PlatCert   *core.PlatformCert //平台证书
-//	HttpClient *http.Client
-//}
-
-
-func NewClient(ctx context.Context, opts ...ClientOption) (core.Client, error) {
-	settings := core.DialSettings{}
+func NewClient(opts ...core.ClientOption) (core.Client, error) {
+	settings := &core.DialSettings{}
 	for _, opt := range opts {
-		if err := opt.Apply(&settings); err != nil {
+		if err := opt.Join(settings); err != nil {
 			return nil, fmt.Errorf("初始化客户端设置错误:%v", err)
 		}
 	}
 	if err := settings.Validate(); err != nil {
-		return nil, fmt.Errorf("初始化客户端设置错误:%v", err)
+		return nil, err
 	}
-	client := core.InitClientWithSettings(ctx, &settings)
+	if settings.HttpClient == nil {
+		settings.HttpClient = &http.Client{
+			Timeout: constant.DefaultTimeout,
+		}
+	}
+
+	client := &core.PayClient{
+		MchId:               settings.MchId,
+		ApiV3Key:            settings.ApiV3Key,
+		ApiSerialNo:         settings.ApiSerialNo,
+		ApiPrivateKey:       settings.ApiPrivateKey,
+		ApiCertificate:      settings.ApiCertificate,
+		PlatformSerialNo:    settings.PlatformSerialNo,
+		PlatformCertificate: settings.PlatformCertificate,
+		HttpClient:          settings.HttpClient,
+	}
+
 	return client, nil
 }
-
-

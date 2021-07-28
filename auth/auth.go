@@ -1,4 +1,4 @@
-package core
+package auth
 
 import (
 	"context"
@@ -27,5 +27,3 @@ type Signer interface {
 type Validator interface {
 	Validate(ctx context.Context, response *http.Response) error // 对 HTTP 应答报文进行验证
 }
-
-

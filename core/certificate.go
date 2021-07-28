@@ -11,14 +11,14 @@ import (
 )
 
 type ApiCert struct {
-	ApiSerialNo      string
-	ApiPrivateKeyStr string
-	ApiCertKey       string
+	ApiSerialNo   string
+	ApiPrivateKey *rsa.PrivateKey // API证书私钥
+	ApiCertificate  *x509.Certificate  // API证书
 }
 
 type PlatformCert struct {
-	PlatformSerialNo string
-	PlatformCertKey  string
+	PlatformSerialNo  string
+	PlatformCertificate *x509.Certificate
 }
 
 // LoadCertificate 通过证书的文本内容加载证书

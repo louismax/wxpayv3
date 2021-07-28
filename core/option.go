@@ -1,24 +1,14 @@
 package core
 
-import (
-	"fmt"
-	"net/http"
-)
-
-type DialSettings struct {
-	HTTPClient *http.Client   // 自定义所使用的 HTTPClient 实例
-	Signer    Signer    // 签名器
-	Validator  Validator // 应答包签名校验器
-	Cipher     Cipher  // 敏感字段加解密套件
+// ClientOption 微信支付 API v3 HTTPClient core.Client 初始化参数
+type ClientOption interface {
+	Join(settings *DialSettings) error
 }
 
-// Validate 校验请求配置是否有效
-func (ds *DialSettings) Validate() error {
-	if ds.Validator == nil {
-		return fmt.Errorf("validator is required for Client")
-	}
-	if ds.Signer == nil {
-		return fmt.Errorf("signer is required for Client")
-	}
-	return nil
+// ErrorOption 错误初始化参数，用于返回错误
+type ErrorOption struct{ Error error }
+
+// Join 返回初始化错误
+func (w ErrorOption) Join(o *DialSettings) error {
+	return w.Error
 }

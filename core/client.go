@@ -1,43 +1,63 @@
 package core
 
 import (
-	"context"
-	"github.com/louismax/wxpayv3/constant"
-	"github.com/louismax/wxpayv3/credentials"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 )
 
-// PayClient 微信支付API v3 基础 Client
-type PayClient struct {
-	httpClient *http.Client
-	credential Credential
-	validator  Validator
-	signer     Signer
-	cipher     Cipher
+type Client interface {
 }
 
-func InitClientWithSettings(_ context.Context, settings *DialSettings) *PayClient {
-	client := &PayClient{
-		signer:     settings.Signer,
-		validator:  settings.Validator,
-		credential: &credentials.WechatPayCredentials{Signer: settings.Signer},
-		httpClient: settings.HTTPClient,
-		cipher:     settings.Cipher,
-	}
+type PayClient struct {
+	MchId               string            // 商户号
+	ApiV3Key            string            // apiV3密钥
+	ApiSerialNo         string            // API证书序列号
+	ApiPrivateKey       *rsa.PrivateKey   // API私钥
+	ApiCertificate      *x509.Certificate // API证书
+	PlatformSerialNo    string            // 平台证书序列号
+	PlatformCertificate *x509.Certificate // 平台证书
+	HttpClient          *http.Client
+}
 
-	if client.httpClient == nil {
-		client.httpClient = &http.Client{
-			Timeout: constant.DefaultTimeout,
+func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string) ([]byte, error) {
+	var data []byte
+	if requestData != nil {
+		var err error
+		data, err = json.Marshal(requestData)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return client
-}
-
-//func (c *PayClient) Authorization(httpMethod string, urlString string, body []byte) (string, error) {
-//	return "", nil
-//}
-
-
-type Client interface {
-	//Authorization(httpMethod string, urlString string, body []byte) (string, error)
+	authorization, err := c.Authorization(httpMethod, url, data)
+	if err != nil {
+		return nil, err
+	}
+	// 重试3次，避免因网络原因导致失败
+	retryTimes := 3
+	var resp *http.Response
+	for i := 0; i < retryTimes; i++ {
+		resp, err = SimpleRequest(c.HttpClient, url, httpMethod, authorization, data)
+		if err != nil {
+			continue
+		}
+		break
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
+	if err != nil {
+		return nil, err
+	}
+	return body, nil
 }

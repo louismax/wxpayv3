@@ -66,7 +66,7 @@ func (c *PayClient) getWechatPayNonce(header *http.Header) string {
 }
 
 func (c *PayClient) verify(headerSerial string, headerSignature string, headerTimestamp string, headerNonce string, body []byte) error {
-	if headerSerial != c.PlatformSerialNo {
+	if c.PlatformSerialNo != "" && headerSerial != c.PlatformSerialNo {
 		return fmt.Errorf("平台证书序列号不匹配,headerSerial:%s,Client_PlatformSerialNo:%s", headerSerial, c.PlatformSerialNo)
 	}
 	switch {
@@ -86,9 +86,11 @@ func (c *PayClient) verify(headerSerial string, headerSignature string, headerTi
 	if err != nil {
 		return err
 	}
-	err = c.verifySignature(string(decodedSignature), verificationStr)
-	if err != nil {
-		return err
+	if c.PlatformCertificate != nil {
+		err = c.verifySignature(string(decodedSignature), verificationStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

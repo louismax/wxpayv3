@@ -3,22 +3,60 @@ package core
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"github.com/louismax/wxpayv3/constant"
+	"github.com/louismax/wxpayv3/custom"
+	"github.com/louismax/wxpayv3/utils"
 	"io/ioutil"
+	"net/http"
 	"time"
 )
 
 type ApiCert struct {
-	ApiSerialNo   string
-	ApiPrivateKey *rsa.PrivateKey // API证书私钥
-	ApiCertificate  *x509.Certificate  // API证书
+	ApiSerialNo    string
+	ApiPrivateKey  *rsa.PrivateKey   // API证书私钥
+	ApiCertificate *x509.Certificate // API证书
 }
 
 type PlatformCert struct {
-	PlatformSerialNo  string
+	PlatformSerialNo    string
 	PlatformCertificate *x509.Certificate
+}
+
+func (c *PayClient) Certificate() (*custom.CertificateResp, error) {
+	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.ApiCertification), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+	var resp custom.CertificateResp
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	for _, data := range resp.Data {
+		encryptCert := data.EncryptCertificate
+		if encryptCert == nil {
+			continue
+		}
+		decryptCert, err := c.Decrypt(encryptCert.Algorithm, encryptCert.Ciphertext, encryptCert.AssociatedData, encryptCert.Nonce)
+		if err != nil {
+			return nil, err
+		}
+		data.DecryptCertificate = string(decryptCert)
+	}
+	return &resp, nil
+}
+func (c *PayClient) SetClientPlatformCert(certificateStr string) error {
+	ct, err := LoadCertificate(certificateStr)
+	if err != nil {
+		return err
+	}
+	c.PlatformSerialNo = GetCertificateSerialNumber(*ct)
+	c.PlatformCertificate = ct
+	return nil
 }
 
 // LoadCertificate 通过证书的文本内容加载证书

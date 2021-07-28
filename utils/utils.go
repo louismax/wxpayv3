@@ -9,9 +9,11 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
+	"github.com/louismax/wxpayv3/constant"
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -70,4 +72,19 @@ func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(signature), nil
+}
+
+func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) string {
+	url := constant.ApiDomain
+	for _, route := range subRoutes {
+		url += strings.TrimLeft(route, "/")
+	}
+	for key, param := range params {
+		url = strings.ReplaceAll(url, "{"+key+"}", param)
+	}
+	if query != nil {
+		url += "?"
+		url += query.Encode()
+	}
+	return url
 }

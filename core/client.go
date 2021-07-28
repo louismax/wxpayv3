@@ -1,14 +1,24 @@
 package core
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
+	"github.com/louismax/wxpayv3/constant"
+	"github.com/louismax/wxpayv3/custom"
 	"io/ioutil"
 	"net/http"
 )
 
 type Client interface {
+	Authorization(httpMethod string, urlString string, body []byte) (string, error) // Authorization 获取签名Authorization，由认证类型和签名信息组成
+	Certificate() (*custom.CertificateResp, error)                                  //获取平台证书
+	SetClientPlatformCert(certificateStr string) error                              //设置平台证书
+
+	QuerySettlementAccount(subMchid string) (*custom.SettlementAccount, error) //获取结算账户
 }
 
 type PayClient struct {
@@ -60,4 +70,30 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 		return nil, err
 	}
 	return body, nil
+}
+
+func (c *PayClient) Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error) {
+	// 默认使用AEAD_AES_256_GCM
+	switch algorithm {
+	default:
+		fallthrough
+	case constant.AlgorithmAEADAES256GCM:
+		decodedCipherText, _ := base64.StdEncoding.DecodeString(cipherText)
+
+		block, err := aes.NewCipher([]byte(c.ApiV3Key))
+		if err != nil {
+			return nil, err
+		}
+
+		aesGcm, err := cipher.NewGCM(block)
+		if err != nil {
+			return nil, err
+		}
+
+		plaintext, err := aesGcm.Open(nil, []byte(nonce), decodedCipherText, []byte(associatedData))
+		if err != nil {
+			return nil, err
+		}
+		return plaintext, nil
+	}
 }

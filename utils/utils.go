@@ -4,12 +4,17 @@ import (
 	"bufio"
 	"bytes"
 	"crypto"
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rand"
 	craned "crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/json"
+	"fmt"
 	"github.com/louismax/wxpayv3/constant"
+	"github.com/louismax/wxpayv3/custom"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -56,7 +61,7 @@ func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr str
 	_ = buff.WriteByte('\n')
 	_, _ = buff.WriteString(nonceStr)
 	_ = buff.WriteByte('\n')
-	if httpMethod == http.MethodPost || httpMethod == http.MethodPut {
+	if httpMethod == http.MethodPost || httpMethod == http.MethodPut || httpMethod == http.MethodPatch {
 		_, _ = buff.Write(body)
 	}
 	_ = buff.WriteByte('\n')
@@ -75,16 +80,59 @@ func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 }
 
 func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) string {
-	url := constant.ApiDomain
+	urlX := constant.ApiDomain
 	for _, route := range subRoutes {
-		url += strings.TrimLeft(route, "/")
+		urlX += strings.TrimLeft(route, "/")
 	}
 	for key, param := range params {
-		url = strings.ReplaceAll(url, "{"+key+"}", param)
+		urlX = strings.ReplaceAll(urlX, "{"+key+"}", param)
 	}
 	if query != nil {
-		url += "?"
-		url += query.Encode()
+		urlX += "?"
+		urlX += query.Encode()
 	}
-	return url
+	return urlX
+}
+
+//FaceMessageDecryption 无需初始化客户端的进行离线团餐人脸报文解密
+func FaceMessageDecryption(data custom.FaceMessageCiphertext, apiV3Key string) (*custom.FaceMessagePlaintext, error) {
+	// 对编码密文进行base64解码
+	decodeBytes, err := base64.StdEncoding.DecodeString(data.Resource.Ciphertext)
+	if err != nil {
+		return nil, err
+	}
+	cx, err := aes.NewCipher([]byte(apiV3Key))
+	if err != nil {
+		return nil, err
+	}
+	gcm, err := cipher.NewGCM(cx)
+	if err != nil {
+		return nil, err
+	}
+	nonceSize := gcm.NonceSize()
+	if len(decodeBytes) < nonceSize {
+		return nil, fmt.Errorf("密文证书长度不够")
+	}
+	res := custom.FaceMessagePlaintext{}
+	if data.Resource.AssociatedData != "" {
+		plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, []byte(data.Resource.AssociatedData))
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(plaintext, &res)
+		if err != nil {
+			return nil, err
+		}
+		return &res, nil
+	} else {
+		plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, nil)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(plaintext, &res)
+		if err != nil {
+			return nil, err
+		}
+		return &res, nil
+	}
 }

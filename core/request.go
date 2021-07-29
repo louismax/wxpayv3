@@ -21,7 +21,7 @@ func NewRequest(authorization string, url string, method string, body io.Reader)
 	return WithBaseHeader(req, authorization), nil
 }
 
-func SimpleRequest(client *http.Client, url string, method string, authorization string, body []byte) (*http.Response, error) {
+func SimpleRequest(client *http.Client, url string, method string, authorization string, body []byte, platformSerialNo string) (*http.Response, error) {
 	if client == nil {
 		client = http.DefaultClient
 	}
@@ -33,6 +33,10 @@ func SimpleRequest(client *http.Client, url string, method string, authorization
 	if err != nil {
 		return nil, err
 	}
+	if platformSerialNo != "" {
+		request.Header.Set("Wechatpay-Serial", platformSerialNo)
+	}
+
 	resp, err := client.Do(request)
 	if err != nil {
 		return nil, err

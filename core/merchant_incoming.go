@@ -14,8 +14,36 @@ func (c *PayClient) QuerySettlementAccount(subMchid string) (*custom.SettlementA
 	if err != nil {
 		return nil, err
 	}
-
 	resp := custom.SettlementAccount{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *PayClient) GetStatusRepairOrderByBusinessCode(businessCode string) (*custom.RespGetStatusRepairOrder, error) {
+	params := map[string]string{"business_code": businessCode}
+	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIGetStatusRepairOrderByBusinessCode), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespGetStatusRepairOrder{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *PayClient) GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error) {
+	params := map[string]string{"applyment_id": applymentId}
+	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIGetStatusRepairOrderByApplymentId), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := custom.RespGetStatusRepairOrder{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err

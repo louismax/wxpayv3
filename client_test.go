@@ -6,12 +6,13 @@ import (
 
 func TestNewClient(t *testing.T) {
 	client, err := NewClient(
-		InjectWechatPayParameterUseCertPath("1607549129", "b5E016760S289934074655Q752T81ZS8", "apiclient_key.pem", "apiclient_cert.pem"),
+		InjectWechatPayParameterUseCertPath("123123", "******", "apiclient_key.pem", "apiclient_cert.pem"),
 	)
 	if err != nil {
 		t.Log(err)
 		return
 	}
+	//下载证书
 	//resp, err := client.Certificate()
 	//if err != nil {
 	//	t.Log(err)
@@ -23,11 +24,20 @@ func TestNewClient(t *testing.T) {
 	//	t.Logf("%+v", *v.EncryptCertificate)
 	//}
 
-	resp, err := client.QuerySettlementAccount("1609337198")
+	//获取结算账号
+	//resp, err := client.QuerySettlementAccount("1609337198")
+	//if err != nil {
+	//	t.Log(err)
+	//	return
+	//}
+	//t.Log(resp)
+
+	//上传图片
+	resp, err := client.UploadImage("./1.jpg")
 	if err != nil {
 		t.Log(err)
 		return
 	}
-	t.Log(resp)
+	t.Logf("%+v", resp)
 
 }

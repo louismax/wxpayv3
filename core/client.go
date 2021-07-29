@@ -17,6 +17,7 @@ type Client interface {
 	Authorization(httpMethod string, urlString string, body []byte) (string, error) // Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Certificate() (*custom.CertificateResp, error)                                  //获取平台证书
 	SetClientPlatformCert(certificateStr string) error                              //设置平台证书
+	UploadImage(filePath string) (*custom.RespUploadImage, error)                   //上传图片（获取MediaId）
 
 	QuerySettlementAccount(subMchid string) (*custom.SettlementAccount, error) //获取结算账户
 }

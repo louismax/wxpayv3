@@ -18,5 +18,6 @@ const ApiDomain = "https://api.mch.weixin.qq.com/"
 
 const (
 	ApiCertification          = "/v3/certificates"                                   // 平台证书下载
+	ApiUploadImage            = "/v3/merchant/media/upload"                          //图片上传
 	ApiQuerySettlementAccount = "/v3/apply4sub/sub_merchants/{sub_mchid}/settlement" //查询结算账户
 )

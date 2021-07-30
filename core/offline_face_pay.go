@@ -210,17 +210,16 @@ func (c *PayClient) FaceMessageDecryption(data custom.FaceMessageCiphertext) (*c
 			return nil, err
 		}
 		return &res, nil
-	} else {
-		plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, nil)
-		if err != nil {
-			return nil, err
-		}
-		err = json.Unmarshal(plaintext, &res)
-		if err != nil {
-			return nil, err
-		}
-		return &res, nil
 	}
+	plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(plaintext, &res)
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
 
 //QueryRepurchaseUsersList QueryRepurchaseUsersList

@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+//WithBaseHeader WithBaseHeader
 func WithBaseHeader(req *http.Request, authorization string) *http.Request {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
@@ -13,6 +14,7 @@ func WithBaseHeader(req *http.Request, authorization string) *http.Request {
 	return req
 }
 
+//NewRequest NewRequest
 func NewRequest(authorization string, url string, method string, body io.Reader) (*http.Request, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
@@ -21,6 +23,7 @@ func NewRequest(authorization string, url string, method string, body io.Reader)
 	return WithBaseHeader(req, authorization), nil
 }
 
+//SimpleRequest SimpleRequest
 func SimpleRequest(client *http.Client, url string, method string, authorization string, body []byte, platformSerialNo string) (*http.Response, error) {
 	if client == nil {
 		client = http.DefaultClient

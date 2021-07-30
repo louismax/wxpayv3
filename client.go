@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+//NewClient NewClient
 func NewClient(opts ...core.ClientOption) (core.Client, error) {
 	settings := &core.DialSettings{}
 	for _, opt := range opts {

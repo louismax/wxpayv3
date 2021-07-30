@@ -12,6 +12,7 @@ import (
 	"net/http"
 )
 
+//ErrResponseBody ErrResponseBody
 type ErrResponseBody struct {
 	HttpStatus int             `json:"http_status"`
 	Code       string          `json:"code"`
@@ -27,6 +28,7 @@ func (r *ErrResponseBody) Error() string {
 	return fmt.Sprintf("HttpStatus:%v Code:%s Message:%s RequestId:%s Detail:%s", r.HttpStatus, r.Code, r.Message, r.ReqId, r.Detail)
 }
 
+// VerifyResponse VerifyResponse
 func (c *PayClient) VerifyResponse(httpStatus int, header *http.Header, body []byte) error {
 	if httpStatus != http.StatusOK && httpStatus != http.StatusNoContent {
 		if body == nil {

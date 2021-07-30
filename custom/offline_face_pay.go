@@ -1,24 +1,29 @@
 package custom
 
+//RespOrganizationInfo RespOrganizationInfo
 type RespOrganizationInfo struct {
 	OrganizationId   string `json:"organization_id"`
 	OrganizationName string `json:"organization_name"`
 }
 
+//ReqObtainAuthToken ReqObtainAuthToken
 type ReqObtainAuthToken struct {
 	Scene       string      `json:"scene"`
 	WebInitData WebInitData `json:"web_init_data"`
 }
 
+//WebInitData WebInitData
 type WebInitData struct {
 	OutUserId      string `json:"out_user_id"`     //商户侧用户ID
 	OrganizationId string `json:"organization_id"` //机构ID
 }
 
+//RespObtainAuthToken RespObtainAuthToken
 type RespObtainAuthToken struct {
 	Token string `json:"token"`
 }
 
+//ReqPayCredential ReqPayCredential
 type ReqPayCredential struct {
 	PayCredential   string          `json:"pay_credential"`    //支付凭证
 	MerchantInfo    MerchantInfo    `json:"merchant_info"`     //商户信息
@@ -31,6 +36,8 @@ type ReqPayCredential struct {
 	OutTradeNo      string          `json:"out_trade_no"`      //商户订单号
 	BusinessInfo    BusinessInfo    `json:"business_info"`     //业务信息
 }
+
+//MerchantInfo MerchantInfo
 type MerchantInfo struct {
 	Mchid    string `json:"mchid"`     //商户号
 	SubMchid string `json:"sub_mchid"` //子商户号
@@ -38,24 +45,29 @@ type MerchantInfo struct {
 	SubAppid string `json:"sub_appid"` //子商户公众号
 }
 
+//TradeAmountInfo TradeAmountInfo
 type TradeAmountInfo struct {
 	Amount   int64  `json:"amount"`   //总金额
 	Currency string `json:"currency"` //货币类型
 }
 
+//SceneInfo SceneInfo
 type SceneInfo struct {
 	DeviceIp string `json:"device_ip"` //设备IP
 }
 
+// DeviceInfo DeviceInfo
 type DeviceInfo struct {
 	Mac string `json:"mac"` //设备mc地址
 }
 
+// BusinessInfo BusinessInfo
 type BusinessInfo struct {
 	BusinessProductId int `json:"business_product_id"` //平台产品ID
 	BusinessSceneId   int `json:"business_scene_id"`   //平台场景ID
 }
 
+//RespPayCredential RespPayCredential
 type RespPayCredential struct {
 	MerchantInfo    MerchantInfo    `json:"merchant_info"`     //商户信息
 	PayerInfo       PayerInfo       `json:"payer_info"`        //支付用户信息
@@ -73,11 +85,13 @@ type RespPayCredential struct {
 	OutTradeNo      string          `json:"out_trade_no"`      //商户订单号
 }
 
+//PayerInfo PayerInfo
 type PayerInfo struct {
 	Openid    string `json:"openid"`     //公众号下的openid
 	SubOpenid string `json:"sub_openid"` //子公众号下的openid
 }
 
+//PromotionList PromotionList
 type PromotionList struct {
 	PromotionId        string          `json:"promotion_id"`        //优惠ID
 	Name               string          `json:"name"`                //优惠名称
@@ -87,6 +101,7 @@ type PromotionList struct {
 	OtherContribute    int64           `json:"other_contribute"`    //其他出资金额
 }
 
+//CorePaymentInfo CorePaymentInfo
 type CorePaymentInfo struct {
 	BankType        string `json:"bank_type"` //付款银行
 	CorePaymentInfo struct {
@@ -95,6 +110,7 @@ type CorePaymentInfo struct {
 	} `json:"core_payment_info"`
 }
 
+//RespQueryFaceUserInfo RespQueryFaceUserInfo
 type RespQueryFaceUserInfo struct {
 	UserId         string      `json:"user_id"`         //微信侧刷脸用户唯一ID
 	OutUserId      string      `json:"out_user_id"`     //商户刷脸用户ID
@@ -109,19 +125,24 @@ type RespQueryFaceUserInfo struct {
 	ContractId     string      `json:"contract_id"`     //签约ID
 }
 
+//StudentInfo StudentInfo
 type StudentInfo struct {
 	ClassName string `json:"class_name"`
 }
+
+//StaffInfo StaffInfo
 type StaffInfo struct {
 	Occupation string `json:"occupation"`
 }
 
+//ReqUpdateUserInfo ReqUpdateUserInfo
 type ReqUpdateUserInfo struct {
 	OrganizationId string               `json:"organization_id"`
 	OutUserId      string               `json:"out_user_id"`
 	RequestData    ReqUpdateRequestData `json:"request_data"`
 }
 
+//ReqUpdateRequestData ReqUpdateRequestData
 type ReqUpdateRequestData struct {
 	UserName    string       `json:"user_name"`
 	UserType    string       `json:"user_type"`
@@ -131,6 +152,7 @@ type ReqUpdateRequestData struct {
 	Phone       string       `json:"phone"`
 }
 
+//ReqPresignToken ReqPresignToken
 type ReqPresignToken struct {
 	BusinessName  string         `json:"business_name"`             //业务类型
 	FacePayUser   FacePayUser    `json:"facepay_user"`              //刷脸用户信息
@@ -138,6 +160,7 @@ type ReqPresignToken struct {
 	ContractMode  string         `json:"contract_mode,omitempty"`   //签约模式 LIMIT_BANK_CARD：指定卡签约；PRIORITY_BANK_CARD：优先卡签约；LIMIT_NONE：任意卡签约
 }
 
+//FacePayUser FacePayUser
 type FacePayUser struct {
 	OutUserId          string          `json:"out_user_id"`
 	IdentificationName string          `json:"identification_name,omitempty"`
@@ -146,11 +169,13 @@ type FacePayUser struct {
 	Phone              string          `json:"phone,omitempty"`
 }
 
+//Identification Identification
 type Identification struct {
 	IdentificationType   string `json:"identification_type"`
 	IdentificationNumber string `json:"identification_number"`
 }
 
+//LimitBankCard LimitBankCard
 type LimitBankCard struct {
 	BankCardNumber     string          `json:"bank_card_number"`
 	IdentificationName string          `json:"identification_name"`
@@ -160,10 +185,12 @@ type LimitBankCard struct {
 	Phone              string          `json:"phone,omitempty"`
 }
 
+//RespPresignToken RespPresignToken
 type RespPresignToken struct {
 	PresignToken string `json:"presign_token"`
 }
 
+//ReqOfflinefaceTransactions ReqOfflinefaceTransactions
 type ReqOfflinefaceTransactions struct {
 	AuthCode    string           `json:"auth_code"`             //支付凭证
 	SpAppid     string           `json:"sp_appid"`              //服务商appid
@@ -179,24 +206,30 @@ type ReqOfflinefaceTransactions struct {
 	OutTradeNo  string           `json:"out_trade_no"`          // 商户单号
 	Business    OTReqBusiness    `json:"business"`              //业务信息
 }
+
+//OTReqAmount OTReqAmount
 type OTReqAmount struct {
 	Total    int64  `json:"total"`    //总金额
 	Currency string `json:"currency"` //货币类型
 }
 
+//OTReqSceneInfo OTReqSceneInfo
 type OTReqSceneInfo struct {
 	DeviceIp string `json:"device_ip"` //设备IP
 }
 
+//OTReqSettleInfo OTReqSettleInfo
 type OTReqSettleInfo struct {
 	ProfitSharing bool `json:"profit_sharing,omitempty"` //是否支持分账
 }
 
+//OTReqBusiness OTReqBusiness
 type OTReqBusiness struct {
 	BusinessProductId int `json:"business_product_id"` //平台产品ID
 	BusinessSceneId   int `json:"business_scene_id"`   //平台场景ID
 }
 
+//RespOfflinefaceTransactions RespOfflinefaceTransactions
 type RespOfflinefaceTransactions struct {
 	SpAppid                string          `json:"sp_appid"`
 	SubAppid               string          `json:"sub_appid"`
@@ -220,11 +253,13 @@ type RespOfflinefaceTransactions struct {
 	OutTradeNo             string          `json:"out_trade_no"`             //商户单号
 }
 
+//OTRespPayer OTRespPayer
 type OTRespPayer struct {
 	SPOpenid  string `json:"sp_openid"`  //公众号下的openid
 	SubOpenid string `json:"sub_openid"` //子公众号下的openid
 }
 
+//OTRespAmount OTRespAmount
 type OTRespAmount struct {
 	Total       int64  `json:"total"`        //订单金额
 	PayTotal    int64  `json:"pay_total"`    //用户支付金额
@@ -232,10 +267,12 @@ type OTRespAmount struct {
 	PayCurrency string `json:"pay_currency"` //用户支付货币类型
 }
 
+//OTRespSceneInfo OTRespSceneInfo
 type OTRespSceneInfo struct {
 	DeviceIp string `json:"device_ip"` //设备IP
 }
 
+//RespContractQuery RespContractQuery
 type RespContractQuery struct {
 	ContractId             string `json:"contract_id"`              //签约ID
 	Mchid                  string `json:"mchid"`                    //商户号
@@ -276,10 +313,12 @@ type FaceMessagePlaintext struct {
 	Openid           string `json:"openid"`             //微信openid
 }
 
+//RespQueryRepurchaseUsersList RespQueryRepurchaseUsersList
 type RespQueryRepurchaseUsersList struct {
 	FaceCollections []FaceCollections `json:"face_collections"`
 }
 
+// FaceCollections FaceCollections
 type FaceCollections struct {
 	CollectionId            string `json:"collection_id"`
 	UserId                  string `json:"user_id"`
@@ -289,6 +328,7 @@ type FaceCollections struct {
 	ConfirmTime             string `json:"confirm_time"`
 }
 
+// ReqGetAuthInfo ReqGetAuthInfo
 type ReqGetAuthInfo struct {
 	SpAppid        string `json:"sp_appid"`
 	SubAppid       string `json:"sub_appid"`
@@ -297,15 +337,19 @@ type ReqGetAuthInfo struct {
 	RawData        string `json:"raw_data"`
 	OrganizationId string `json:"organization_id"`
 }
+
+// RespGetAuthInfo RespGetAuthInfo
 type RespGetAuthInfo struct {
 	AuthInfo string `json:"authinfo"`
 }
 
+// ReqGetRepaymentUrl ReqGetRepaymentUrl
 type ReqGetRepaymentUrl struct {
 	OutUserId      string `json:"out_user_id"`
 	OrganizationId string `json:"organization_id"`
 }
 
+// RespGetRepaymentUrl RespGetRepaymentUrl
 type RespGetRepaymentUrl struct {
 	RepaymentUrl string `json:"repayment_url"`
 	ExpireAt     string `json:"expire_at"`

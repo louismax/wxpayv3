@@ -22,8 +22,10 @@ import (
 )
 
 const (
-	NonceSymbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // 随机字符串可用字符集
-	NonceLength  = 32                                                               // 随机字符串的长度
+	// NonceSymbols 随机字符串可用字符集
+	NonceSymbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	// NonceLength 随机字符串的长度
+	NonceLength = 32
 )
 
 //GenerateNonce 生成32位随机字符串
@@ -40,6 +42,7 @@ func GenerateNonce() (string, error) {
 	return string(bs), nil
 }
 
+//BuildMessage BuildMessage
 func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr string, timestamp int64) ([]byte, error) {
 	parsedUrl, err := url.Parse(urlString)
 	if err != nil {
@@ -69,6 +72,7 @@ func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr str
 	return buffer.Bytes(), nil
 }
 
+//Sign Sign
 func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 	h := sha256.New()
 	h.Write(message)
@@ -79,6 +83,7 @@ func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 	return base64.StdEncoding.EncodeToString(signature), nil
 }
 
+//BuildUrl BuildUrl
 func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) string {
 	urlX := constant.ApiDomain
 	for _, route := range subRoutes {
@@ -124,15 +129,14 @@ func FaceMessageDecryption(data custom.FaceMessageCiphertext, apiV3Key string) (
 			return nil, err
 		}
 		return &res, nil
-	} else {
-		plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, nil)
-		if err != nil {
-			return nil, err
-		}
-		err = json.Unmarshal(plaintext, &res)
-		if err != nil {
-			return nil, err
-		}
-		return &res, nil
 	}
+	plaintext, err := gcm.Open(nil, []byte(data.Resource.Nonce), decodeBytes, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(plaintext, &res)
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
 }

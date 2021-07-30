@@ -52,8 +52,8 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 	var size = stats.Size()
 	fBytes := make([]byte, size)
 	bf := bufio.NewReader(file)
-	_, err = bf.Read(fBytes)
-	if err != nil {
+
+	if _, err = bf.Read(fBytes); err != nil {
 		return nil, err
 	}
 	//二进制内容进行sha256计算得到的值
@@ -84,8 +84,8 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 	if err != nil {
 		return nil, err
 	}
-	_, err = part.Write(data)
-	if err != nil {
+
+	if _, err = part.Write(data); err != nil {
 		return nil, err
 	}
 
@@ -93,13 +93,11 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 	if err != nil {
 		return nil, err
 	}
-	_, err = parTF.Write(fBytes)
-	if err != nil {
+	if _, err = parTF.Write(fBytes); err != nil {
 		return nil, err
 	}
 
-	err = writer.Close()
-	if err != nil {
+	if err = writer.Close(); err != nil {
 		return nil, err
 	}
 

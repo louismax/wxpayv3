@@ -17,6 +17,7 @@ import (
 	"net/http"
 )
 
+//Client Client
 type Client interface {
 	// Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
@@ -75,6 +76,7 @@ type Client interface {
 	GetRepaymentUrl(data custom.ReqGetRepaymentUrl) (*custom.RespGetRepaymentUrl, error)
 }
 
+//PayClient PayClient
 type PayClient struct {
 	MchId               string            // 商户号
 	ApiV3Key            string            // apiV3密钥
@@ -126,6 +128,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	return body, nil
 }
 
+//Decrypt Decrypt
 func (c *PayClient) Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error) {
 	// 默认使用AEAD_AES_256_GCM
 	switch algorithm {

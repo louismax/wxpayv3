@@ -1,5 +1,6 @@
 package custom
 
+//SettlementAccount SettlementAccount
 type SettlementAccount struct {
 	AccountType   string `json:"account_type"`
 	AccountBank   string `json:"account_bank"`
@@ -9,6 +10,7 @@ type SettlementAccount struct {
 	VerifyResult  string `json:"verify_result"`
 }
 
+//RespGetStatusRepairOrder RespGetStatusRepairOrder
 type RespGetStatusRepairOrder struct {
 	BusinessCode      string        `json:"business_code"`
 	ApplymentId       int64         `json:"applyment_id"`
@@ -18,6 +20,8 @@ type RespGetStatusRepairOrder struct {
 	ApplymentStateMsg string        `json:"applyment_state_msg"`
 	AuditDetail       []AuditDetail `json:"audit_detail"`
 }
+
+//AuditDetail AuditDetail
 type AuditDetail struct {
 	Field        string `json:"field"`
 	FieldName    string `json:"field_name"`

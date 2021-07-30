@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+//DialSettings DialSettings
 type DialSettings struct {
 	MchId               string            // 商户号
 	ApiV3Key            string            // apiV3密钥
@@ -54,12 +55,14 @@ func (ds *DialSettings) Validate() error {
 	return nil
 }
 
+//BasicInformation BasicInformation
 type BasicInformation struct {
 	MchID       string
 	MchAPIv3Key string
 	ApiCert     ApiCert
 }
 
+//Join Join
 func (w BasicInformation) Join(o *DialSettings) error {
 	o.MchId = w.MchID
 	o.ApiV3Key = w.MchAPIv3Key
@@ -69,6 +72,7 @@ func (w BasicInformation) Join(o *DialSettings) error {
 	return nil
 }
 
+//Join Join
 func (w PlatformCert) Join(o *DialSettings) error {
 	o.PlatformSerialNo = w.PlatformSerialNo
 	o.PlatformCertificate = w.PlatformCertificate

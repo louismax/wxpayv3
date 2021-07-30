@@ -15,17 +15,20 @@ import (
 	"time"
 )
 
+// ApiCert ApiCert
 type ApiCert struct {
 	ApiSerialNo    string
 	ApiPrivateKey  *rsa.PrivateKey   // API证书私钥
 	ApiCertificate *x509.Certificate // API证书
 }
 
+// PlatformCert PlatformCert
 type PlatformCert struct {
 	PlatformSerialNo    string
 	PlatformCertificate *x509.Certificate
 }
 
+//Certificate Certificate
 func (c *PayClient) Certificate() (*custom.CertificateResp, error) {
 	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.ApiCertification), http.MethodGet)
 	if err != nil {
@@ -49,6 +52,8 @@ func (c *PayClient) Certificate() (*custom.CertificateResp, error) {
 	}
 	return &resp, nil
 }
+
+//SetClientPlatformCert SetClientPlatformCert
 func (c *PayClient) SetClientPlatformCert(certificateStr string) error {
 	ct, err := LoadCertificate(certificateStr)
 	if err != nil {

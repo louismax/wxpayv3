@@ -3,12 +3,15 @@ package constant
 import "time"
 
 const (
+	//AlgorithmAEADAES256GCM AlgorithmAEADAES256GCM
 	AlgorithmAEADAES256GCM = "AEAD_AES_256_GCM"
 )
 const (
-	DefaultTimeout = 30 * time.Second // HTTP 请求默认超时时间
+	//DefaultTimeout HTTP 请求默认超时时间
+	DefaultTimeout = 30 * time.Second
 )
 
+//ApiDomain ApiDomain
 const ApiDomain = "https://api.mch.weixin.qq.com/"
 
 //基础类接口

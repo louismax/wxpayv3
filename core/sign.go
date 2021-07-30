@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+//CertificationType CertificationType
 const CertificationType = "WECHATPAY2-SHA256-RSA2048"
 
 //Authorization 获取WechatPayV3的header信息Authorization
@@ -35,6 +36,7 @@ func (c *PayClient) Token(httpMethod string, rawUrl string, body []byte) (string
 	return fmt.Sprintf(`mchid="%s",nonce_str="%s",signature="%s",timestamp="%v",serial_no="%s"`, c.MchId, nonce, signature, timestamp, c.ApiSerialNo), nil
 }
 
+//Sign Sign
 func (c *PayClient) Sign(message []byte) (string, error) {
 	return utils.Sign(message, c.ApiPrivateKey)
 }

@@ -21,6 +21,7 @@ import (
 	"strings"
 )
 
+//UploadImage UploadImage
 func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error) {
 	//获取文件名带后缀
 	filenameWithSuffix := path.Base(filePath)
@@ -140,6 +141,7 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 
 }
 
+//CreateForm CreateForm
 func CreateForm(key, contentType string, w *multipart.Writer) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition",
@@ -154,6 +156,8 @@ var quoteEscape = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
 func escapeQuotes(s string) string {
 	return quoteEscape.Replace(s)
 }
+
+//CreateFormFile CreateFormFile
 func CreateFormFile(fieldName, filename, contentType string, w *multipart.Writer) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition",

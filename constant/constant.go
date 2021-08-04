@@ -27,7 +27,19 @@ const (
 	APIGetStatusRepairOrderByApplymentId  = "/v3/applyment4sub/applyment/applyment_id/{applyment_id}"   //通过申请单号查询申请状态
 )
 
-//离线团餐类接口
+//教培续费通相关接口
+const (
+	APIEduPaPayPresign                   = "/v3/edu-papay/contracts/presign"                        //预签约
+	APIEduPaPayContractQueryById         = "/v3/edu-papay/contracts/id/{contract_id}"               //通过签约ID查询签约
+	APIEduPaPayContractQueryByOpenId     = "/v3/edu-papay/user/{openid}/contracts"                  //通过用户标识查询签约
+	APIDissolveEduPaPayContract          = "/v3/edu-papay/contracts/{contract_id}"                  //解约
+	APISendEduPaPayNotifications         = "/v3/edu-papay/user-notifications/{contract_id}/send"    //发送扣款预通知
+	APIEduPaPayTransactions              = "/v3/edu-papay/transactions"                             //教培通扣款受理
+	APIEduPaPayQueryOrderByTransactionId = "/v3/edu-papay/transactions/id/{transaction_id}"         //教培通使用微信单号查单
+	APIEduPaPayQueryOrderByOutTradeNo    = "/v3/edu-papay/transactions/out-trade-no/{out_trade_no}" //教培通使用商户订单号查单
+)
+
+//K12离线团餐类接口
 const (
 	APIQueryOrganizationInfoById   = "/v3/offlinefacemch/organizations?organization_id={organization_id}"                                                                           //根据机构ID查询机构信息
 	APIQueryOrganizationInfoByName = "/v3/offlinefacemch/organizations?organization_name={organization_name}"                                                                       //根据机构名称查询机构信息

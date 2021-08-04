@@ -1,36 +1,32 @@
 # wxpayv3 (wechatpay-api-v3)
+[简体中文](README.md)
+## 微信支付API V3 SDK for GO
 
-微信支付API V3 SDK for GO, 集成简单，支持公钥证书签名和验签,功能完善，持续更新。
+[![Go Report Card](https://goreportcard.com/badge/github.com/louismax/wxpayv3)](https://goreportcard.com/report/github.com/louismax/wxpayv3)
+[![GoDoc](https://godoc.org/github.com/louismax/wxpayv3?status.svg)](https://godoc.org/github.com/louismax/wxpayv3)
+[![GitHub release](https://img.shields.io/github/tag/louismax/wxpayv3.svg)](https://github.com/louismax/wxpayv3/releases)
+[![GitHub license](https://img.shields.io/github/license/louismax/wxpayv3.svg)](https://github.com/louismax/wxpayv3/blob/master/LICENSE)
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/louismax/wxpayv3.svg)](https://img.shields.io/github/repo-size/louismax/wxpayv3.svg)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/louismax/wxpayv3.svg)](https://img.shields.io/github/last-commit/louismax/wxpayv3.svg)
 
-**开发中!!! **
+## 安装
+`go get -v github.com/louismax/wxpayv3`
 
-**开发中!!! **
-
-**开发中!!! **
-
-
-
-### 主要特性
-- 待补充
-
-### WechatPay-API-v3官方文档：
-https://wechatpay-api.gitbook.io/wechatpay-api-v3/
-全新的微信支付API v3，相较于的之前微信支付API，主要区别是：
-- 遵循统一的Restful的设计风格；
-- 使用JSON作为数据交互的格式，不再使用XML；
-- 使用基于非对称密钥的SHA256-RSA的数字签名算法，不再使用MD5或HMAC-SHA256；
-- 不再要求HTTPS客户端证书；
-- 使用AES-256-GCM，对回调中的关键信息进行加密保护
+## 实现能力
+### 商户进件(仅支持服务商)
+- 提交申请单-  ❌
+- 查询申请单状态  ✔️
+- 修改结算账号  ❌
+- 查询结算账号  ✔️
 
 
 
-**目录 (Table of Contents)**
+## 参考资料
+* [微信支付商户平台API文档](https://pay.weixin.qq.com/wiki/doc/apiv3/index.shtml)
+* [微信支付服务商平台API文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/index.shtml)
+* [微信支付API V3接口规范](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/wechatpay/wechatpay-1.shtml)
+* [微信支付教培续费通](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/edu-papay/chapter1_1.shtml)
 
-[TOCM]
+## 协议
+MIT 许可证（MIT）。有关更多信息，请参见[协议文件](LICENSE)。
 
-[TOC]
-
-### License
-This project is licensed under the MIT License.
-
-### End

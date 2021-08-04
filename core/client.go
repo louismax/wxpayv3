@@ -15,6 +15,7 @@ import (
 	"github.com/louismax/wxpayv3/custom"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 //Client Client
@@ -41,6 +42,23 @@ type Client interface {
 	GetStatusRepairOrderByBusinessCode(businessCode string) (*custom.RespGetStatusRepairOrder, error)
 	// GetStatusRepairOrderByApplymentId 通过申请单号查询申请状态
 	GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error)
+
+	// EduPaPayPresign 教培续费通预签约
+	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)
+	// EduPaPayContractQueryById 通过协议号查询教培续费通签约
+	EduPaPayContractQueryById(contractId string, query url.Values) (*custom.RespEduPaPayContractQuery, error)
+	// EduPaPayContractQueryByOpenId 通用户标识查询教培续费通签约
+	EduPaPayContractQueryByOpenId(openid string, query url.Values) (*custom.RespEduPaPayContractQueryList, error)
+	// DissolveEduPaPayContract 教培续费通解约
+	DissolveEduPaPayContract(contractId string) error
+	// SendEduPaPayNotifications 发送预扣款通知
+	SendEduPaPayNotifications(contractId string, data custom.ReqSendEduPaPayNotifications) error
+	// EduPaPayTransactions 教培通扣款受理
+	EduPaPayTransactions(data custom.ReqEduPaPayTransactions) error
+	// EduPaPayQueryOrderByTransactionId 教培通微信订单号查单
+	EduPaPayQueryOrderByTransactionId(transactionId string, query url.Values) (*custom.RespEduPaPayQueryOrder, error)
+	// EduPaPayQueryOrderByOutTradeNo 教培通商户订单号查单
+	EduPaPayQueryOrderByOutTradeNo(outTradeNo string, query url.Values) (*custom.RespEduPaPayQueryOrder, error)
 
 	// QueryOrganizationInfoById 获取机构信息(根据机构ID)
 	QueryOrganizationInfoById(organizationId string) (*custom.RespOrganizationInfo, error)

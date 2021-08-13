@@ -43,6 +43,9 @@ type Client interface {
 	// GetStatusRepairOrderByApplymentId 通过申请单号查询申请状态
 	GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error)
 
+	//PaymentRefund 基础支付-退款
+	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
+
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)
 	// EduPaPayContractQueryById 通过协议号查询教培续费通签约

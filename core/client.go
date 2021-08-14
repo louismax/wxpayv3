@@ -79,8 +79,8 @@ type Client interface {
 	DissolveFaceUserContract(organizationId, outUserId string) error
 	// PreSignature 预签约
 	PreSignature(data custom.ReqPresignToken) (*custom.RespPresignToken, error)
-	// OfflinefaceTransactions 申请扣款
-	OfflinefaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error)
+	// OfflineFaceTransactions 申请扣款
+	OfflineFaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error)
 	// ContractQuery 签约查询
 	ContractQuery(contractId, AppId string) (*custom.RespContractQuery, error)
 	// FaceMessageDecryption 人脸报文(签约解约)消息解密

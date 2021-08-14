@@ -151,8 +151,8 @@ func (c *PayClient) PreSignature(data custom.ReqPresignToken) (*custom.RespPresi
 	return &resp, nil
 }
 
-//OfflinefaceTransactions OfflinefaceTransactions
-func (c *PayClient) OfflinefaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error) {
+//OfflineFaceTransactions OfflineFaceTransactions
+func (c *PayClient) OfflineFaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIOfflinefaceTransactions), http.MethodPost)
 	if err != nil {
 		return nil, err

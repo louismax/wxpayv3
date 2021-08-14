@@ -43,6 +43,9 @@ type Client interface {
 	// GetStatusRepairOrderByApplymentId 通过申请单号查询申请状态
 	GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error)
 
+	//PaymentRefund 基础支付-退款
+	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
+
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)
 	// EduPaPayContractQueryById 通过协议号查询教培续费通签约
@@ -76,8 +79,8 @@ type Client interface {
 	DissolveFaceUserContract(organizationId, outUserId string) error
 	// PreSignature 预签约
 	PreSignature(data custom.ReqPresignToken) (*custom.RespPresignToken, error)
-	// OfflinefaceTransactions 申请扣款
-	OfflinefaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error)
+	// OfflineFaceTransactions 申请扣款
+	OfflineFaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error)
 	// ContractQuery 签约查询
 	ContractQuery(contractId, AppId string) (*custom.RespContractQuery, error)
 	// FaceMessageDecryption 人脸报文(签约解约)消息解密

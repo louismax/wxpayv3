@@ -1,12 +1,14 @@
 package wxpayv3
 
 import (
+	"github.com/louismax/wxpayv3/custom"
+	"github.com/louismax/wxpayv3/utils"
 	"testing"
 )
 
 func TestNewClient(t *testing.T) {
 	client, err := NewClient(
-		InjectWechatPayParameterUseCertPath("123123", "******", "apiclient_key.pem", "apiclient_cert.pem"),
+		InjectWechatPayParameterUseCertPath("1234", "1234", "apiclient_key.pem", "apiclient_cert.pem"),
 	)
 	if err != nil {
 		t.Log(err)
@@ -33,11 +35,29 @@ func TestNewClient(t *testing.T) {
 	//t.Log(resp)
 
 	//上传图片
-	resp, err := client.UploadImage("./1.jpg")
+	//resp, err := client.UploadImage("./1.jpg")
+	//if err != nil {
+	//	t.Log(err)
+	//	return
+	//}
+	//t.Logf("%+v", resp)
+
+	//退款
+	uid, _ := utils.GenerateNonce()
+	resp, err := client.PaymentRefund(custom.ReqPaymentRefund{
+		SubMchid:      "123",
+		TransactionId: "4200001126202108129763281234",
+		OutRefundNo:   uid,
+		Reason:        "API调试",
+		Amount: custom.PaymentRefundAmount{
+			Refund:   1,
+			Total:    1,
+			Currency: "CNY",
+		},
+	})
 	if err != nil {
 		t.Log(err)
 		return
 	}
-	t.Logf("%+v", resp)
-
+	t.Log(resp)
 }

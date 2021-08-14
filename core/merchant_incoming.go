@@ -11,7 +11,7 @@ import (
 //QuerySettlementAccount QuerySettlementAccount
 func (c *PayClient) QuerySettlementAccount(subMchid string) (*custom.SettlementAccount, error) {
 	params := map[string]string{"sub_mchid": subMchid}
-	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.ApiQuerySettlementAccount), http.MethodGet)
+	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQuerySettlementAccount), http.MethodGet)
 	if err != nil {
 		return nil, err
 	}

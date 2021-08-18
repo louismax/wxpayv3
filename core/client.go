@@ -32,6 +32,8 @@ type Client interface {
 	RsaDecryptByPrivateKey(ciphertext string) (string, error)
 	// RsaEncryptByPublicKey 使用平台公钥RAS加密敏感数据
 	RsaEncryptByPublicKey(plaintext string) (string, error)
+	// Decrypt 通知密文数据使用V3Key解密 （AEAD_AES_256_GCM）
+	Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error)
 
 	// UploadImage 上传图片（获取MediaId）
 	UploadImage(filePath string) (*custom.RespUploadImage, error)

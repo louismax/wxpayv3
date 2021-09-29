@@ -13,7 +13,7 @@ import (
 	"net/url"
 )
 
-//QueryOrganizationInfoById QueryOrganizationInfoById
+//QueryOrganizationInfoById is QueryOrganizationInfoById
 func (c *PayClient) QueryOrganizationInfoById(organizationId string) (*custom.RespOrganizationInfo, error) {
 	params := map[string]string{"organization_id": organizationId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryOrganizationInfoById), http.MethodGet)
@@ -29,7 +29,7 @@ func (c *PayClient) QueryOrganizationInfoById(organizationId string) (*custom.Re
 	return &resp, nil
 }
 
-//QueryOrganizationInfoByName QueryOrganizationInfoByName
+//QueryOrganizationInfoByName is QueryOrganizationInfoByName
 func (c *PayClient) QueryOrganizationInfoByName(organizationName string) (*custom.RespOrganizationInfo, error) {
 	params := map[string]string{"organization_name": url.QueryEscape(organizationName)}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryOrganizationInfoByName), http.MethodGet)

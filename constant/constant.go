@@ -62,3 +62,15 @@ const (
 	APIGetAuthInfo                 = "/v3/offlineface/authinfo"                                                                                                                     //获取AuthInfo
 	APIGetRepaymentUrl             = "/v3/offlineface/repayment-url"                                                                                                                //获取还款链接
 )
+
+const (
+	APIInitiateProfitSharing             = "/v3/profitsharing/orders"                                                                          //请求分账
+	APIQueryProfitSharingResult          = "/v3/profitsharing/orders/{out_order_no}?sub_mchid={sub_mchid}&transaction_id={transaction_id}"     //查询分账结果
+	APIInitiateProfitSharingReturnOrders = "/v3/profitsharing/return-orders"                                                                   //请求分账回退
+	APIQueryProfitSharingReturnOrders    = "/v3/profitsharing/return-orders/{out_return_no}?sub_mchid={sub_mchid}&out_order_no={out_order_no}" //查询分账回退结果
+	APIUnfreezeRemainingFunds            = "/v3/profitsharing/orders/unfreeze"                                                                 //解冻剩余资金
+	APIQueryRemainingFrozenAmount        = "/v3/profitsharing/transactions/{transaction_id}/amounts"                                           //查询剩余待分金额
+	APIQueryMaximumSplitRatio            = "/v3/profitsharing/merchant-configs/{sub_mchid}"                                                    //查询查询最大分账比例
+	APIAddProfitSharingReceiver          = "/v3/profitsharing/receivers/add"                                                                   //添加分账接收方
+	APIDeleteProfitSharingReceiver       = "/v3/profitsharing/receivers/delete"                                                                //删除分账接收方
+)

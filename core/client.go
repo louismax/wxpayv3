@@ -45,6 +45,25 @@ type Client interface {
 	// GetStatusRepairOrderByApplymentId 通过申请单号查询申请状态
 	GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error)
 
+	//InitiateProfitSharing 发起分账请求
+	InitiateProfitSharing(data custom.ReqInitiateProfitSharing) (*custom.RespInitiateProfitSharing, error)
+	//QueryProfitSharingResult 查询分账结果
+	QueryProfitSharingResult(subMchid, transactionId, outOrderNo string) (*custom.RespQueryProfitSharingResult, error)
+	//InitiateProfitSharingReturnOrders 请求分账回退
+	InitiateProfitSharingReturnOrders(data custom.ReqInitiateProfitSharingReturnOrders) (*custom.RespInitiateProfitSharingReturnOrders, error)
+	//QueryProfitSharingReturnOrders 查询分账回退结果
+	QueryProfitSharingReturnOrders(subMchid, outReturnNo, outOrderNo string) (*custom.RespQueryProfitSharingReturnOrders, error)
+	//UnfreezeRemainingFunds 解冻剩余资金
+	UnfreezeRemainingFunds(data custom.ReqUnfreezeRemainingFunds) (*custom.RespUnfreezeRemainingFunds, error)
+	//QueryRemainingFrozenAmount 查询订单待分金额
+	QueryRemainingFrozenAmount(transactionId string) (*custom.RespQueryRemainingFrozenAmount, error)
+	//QueryMaximumSplitRatio 查询子商户最大分账比例
+	QueryMaximumSplitRatio(subMchid string) (*custom.RespQueryMaximumSplitRatio, error)
+	//AddProfitSharingReceiver 添加分账接收方
+	AddProfitSharingReceiver(data custom.ReqAddProfitSharingReceiver) (*custom.RespAddProfitSharingReceiver, error)
+	//DeleteProfitSharingReceiver 删除分账接收方
+	DeleteProfitSharingReceiver(data custom.ReqDeleteProfitSharingReceiver) (*custom.RespDeleteProfitSharingReceiver, error)
+
 	//PaymentRefund 基础支付-退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
 

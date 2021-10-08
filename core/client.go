@@ -18,7 +18,7 @@ import (
 	"net/url"
 )
 
-//Client Client
+//Client is Client
 type Client interface {
 	// Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
@@ -38,7 +38,11 @@ type Client interface {
 	// UploadImage 上传图片（获取MediaId）
 	UploadImage(filePath string) (*custom.RespUploadImage, error)
 
-	// QuerySettlementAccount 获取结算账户
+	//IncomingSubmitApplication 提交进件申请单
+	IncomingSubmitApplication(data custom.ReqIncomingSubmitApplication) (*custom.RespIncomingSubmitApplication, error)
+	//ModifySettlement 修改结算账号
+	ModifySettlement(subMchid string, data custom.ReqModifySettlement) error
+	// QuerySettlementAccount 查询结算账户
 	QuerySettlementAccount(subMchid string) (*custom.SettlementAccount, error)
 	// GetStatusRepairOrderByBusinessCode 通过业务申请编号查询申请状态
 	GetStatusRepairOrderByBusinessCode(businessCode string) (*custom.RespGetStatusRepairOrder, error)

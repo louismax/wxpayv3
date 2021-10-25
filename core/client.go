@@ -18,7 +18,7 @@ import (
 	"net/url"
 )
 
-//Client Client
+//Client is Client
 type Client interface {
 	// Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
@@ -38,7 +38,13 @@ type Client interface {
 	// UploadImage 上传图片（获取MediaId）
 	UploadImage(filePath string) (*custom.RespUploadImage, error)
 
-	// QuerySettlementAccount 获取结算账户
+	DownloadBill(downloadUrl string) ([]byte, error)
+
+	//IncomingSubmitApplication 提交进件申请单
+	IncomingSubmitApplication(data custom.ReqIncomingSubmitApplication) (*custom.RespIncomingSubmitApplication, error)
+	//ModifySettlement 修改结算账号
+	ModifySettlement(subMchid string, data custom.ReqModifySettlement) error
+	// QuerySettlementAccount 查询结算账户
 	QuerySettlementAccount(subMchid string) (*custom.SettlementAccount, error)
 	// GetStatusRepairOrderByBusinessCode 通过业务申请编号查询申请状态
 	GetStatusRepairOrderByBusinessCode(businessCode string) (*custom.RespGetStatusRepairOrder, error)
@@ -63,9 +69,15 @@ type Client interface {
 	AddProfitSharingReceiver(data custom.ReqAddProfitSharingReceiver) (*custom.RespAddProfitSharingReceiver, error)
 	//DeleteProfitSharingReceiver 删除分账接收方
 	DeleteProfitSharingReceiver(data custom.ReqDeleteProfitSharingReceiver) (*custom.RespDeleteProfitSharingReceiver, error)
+	//ApplyProfitSharingBill 申请分账账单
+	ApplyProfitSharingBill(billDate, subMchid, tarType string) (*custom.RespApplyTransactionBill, error)
 
 	//PaymentRefund 基础支付-退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
+	//ApplyTransactionBill //申请交易账单
+	ApplyTransactionBill(billDate,subMchid, billType,tarType string) (*custom.RespApplyTransactionBill, error)
+	//ApplyFundBill //申请资金账单
+	ApplyFundBill(billDate,accountType,tarType string) (*custom.RespApplyTransactionBill, error)
 
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)
@@ -130,7 +142,7 @@ type PayClient struct {
 	HttpClient          *http.Client
 }
 
-func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string) ([]byte, error) {
+func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string, isCheck ...bool) ([]byte, error) {
 	var data []byte
 	if requestData != nil {
 		var err error
@@ -163,10 +175,20 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	if err != nil {
 		return nil, err
 	}
-	err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
-	if err != nil {
-		return nil, err
+	if len(isCheck) > 0 {
+		if !isCheck[0] {
+			err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
+			if err != nil {
+				return nil, err
+			}
+		}
+	} else {
+		err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return body, nil
 }
 

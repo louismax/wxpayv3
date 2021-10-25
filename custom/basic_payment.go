@@ -74,3 +74,9 @@ type RespPaymentRefund struct {
 		} `json:"goods_detail"`
 	} `json:"promotion_detail"`
 }
+
+type RespApplyTransactionBill struct {
+	DownloadURL string `json:"download_url"`
+	HashType    string `json:"hash_type"`
+	HashValue   string `json:"hash_value"`
+}

@@ -22,14 +22,20 @@ const (
 
 //服务商特约商户进件类接口
 const (
+	APIIncomingSubmitApplication          = "/v3/applyment4sub/applyment/"                              //提交进件申请单
+	APIModifySettlement                   = "/v3/apply4sub/sub_merchants/{sub_mchid}/modify-settlement" //修改结算账号
 	APIQuerySettlementAccount             = "/v3/apply4sub/sub_merchants/{sub_mchid}/settlement"        //查询结算账户
 	APIGetStatusRepairOrderByBusinessCode = "/v3/applyment4sub/applyment/business_code/{business_code}" //通过业务申请编号查询申请状态
 	APIGetStatusRepairOrderByApplymentId  = "/v3/applyment4sub/applyment/applyment_id/{applyment_id}"   //通过申请单号查询申请状态
 )
 
 const (
-	APIPaymentRefund      = "/v3/refund/domestic/refunds"                 //基础支付退款
-	APIPaymentQueryRefund = "/v3/refund/domestic/refunds/{out_refund_no}" //退款查询
+	APIPaymentRefund          = "/v3/refund/domestic/refunds"                 //基础支付退款
+	APIPaymentQueryRefund     = "/v3/refund/domestic/refunds/{out_refund_no}" //退款查询
+	APIApplyTransactionBill   = "/v3/bill/tradebill"                          //申请交易账单
+	APIApplyFundBill          = "/v3/bill/fundflowbill"                       //申请资金账单
+	APIApplyProfitSharingBill = "/v3/profitsharing/bills"                     //申请分账账单
+
 )
 
 //教培续费通相关接口

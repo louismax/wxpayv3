@@ -87,7 +87,12 @@ func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) string {
 	urlX := constant.ApiDomain
 	for _, route := range subRoutes {
-		urlX += strings.TrimLeft(route, "/")
+		if strings.Contains(route, constant.ApiDomain){
+			urlX = route
+			break
+		}else{
+			urlX += strings.TrimLeft(route, "/")
+		}
 	}
 	for key, param := range params {
 		urlX = strings.ReplaceAll(urlX, "{"+key+"}", param)

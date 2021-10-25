@@ -6,6 +6,7 @@ import (
 	"github.com/louismax/wxpayv3/custom"
 	"github.com/louismax/wxpayv3/utils"
 	"net/http"
+	"net/url"
 )
 
 //InitiateProfitSharing is InitiateProfitSharing
@@ -131,6 +132,28 @@ func (c *PayClient) DeleteProfitSharingReceiver(data custom.ReqDeleteProfitShari
 		return nil, err
 	}
 	resp := custom.RespDeleteProfitSharingReceiver{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+//ApplyProfitSharingBill 申请分账账单
+func (c *PayClient) ApplyProfitSharingBill(billDate, subMchid, tarType string) (*custom.RespApplyTransactionBill, error) {
+	qy := url.Values{}
+	qy.Set("bill_date", billDate)
+	if subMchid != "" {
+		qy.Set("sub_mchid", subMchid)
+	}
+	if tarType != "" {
+		qy.Set("tar_type", tarType)
+	}
+	body, err := c.doRequest(nil, utils.BuildUrl(nil, qy, constant.APIApplyProfitSharingBill), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespApplyTransactionBill{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err

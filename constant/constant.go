@@ -30,8 +30,12 @@ const (
 )
 
 const (
-	APIPaymentRefund      = "/v3/refund/domestic/refunds"                 //基础支付退款
-	APIPaymentQueryRefund = "/v3/refund/domestic/refunds/{out_refund_no}" //退款查询
+	APIPaymentRefund          = "/v3/refund/domestic/refunds"                 //基础支付退款
+	APIPaymentQueryRefund     = "/v3/refund/domestic/refunds/{out_refund_no}" //退款查询
+	APIApplyTransactionBill   = "/v3/bill/tradebill"                          //申请交易账单
+	APIApplyFundBill          = "/v3/bill/fundflowbill"                       //申请资金账单
+	APIApplyProfitSharingBill = "/v3/profitsharing/bills"                     //申请分账账单
+
 )
 
 //教培续费通相关接口

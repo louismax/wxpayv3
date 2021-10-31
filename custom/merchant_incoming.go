@@ -68,10 +68,10 @@ type ApplyBusinessInfo struct {
 type SettlementInfo struct {
 	SettlementID        string    `json:"settlement_id"`
 	QualificationType   string    `json:"qualification_type"`
-	Qualifications      *[]string `json:"qualifications,omitempty"`
+	Qualifications      []string `json:"qualifications,omitempty"`
 	ActivitiesID        string    `json:"activities_id,omitempty"`
 	ActivitiesRate      string    `json:"activities_rate,omitempty"`
-	ActivitiesAdditions *[]string `json:"activities_additions,omitempty"`
+	ActivitiesAdditions []string `json:"activities_additions,omitempty"`
 }
 
 type BankAccountInfo struct {
@@ -87,7 +87,7 @@ type BankAccountInfo struct {
 type AdditionInfo struct {
 	LegalPersonCommitment string    `json:"legal_person_commitment,omitempty"`
 	LegalPersonVideo      string    `json:"legal_person_video,omitempty"`
-	BusinessAdditionPics  *[]string `json:"business_addition_pics,omitempty"`
+	BusinessAdditionPics  []string `json:"business_addition_pics,omitempty"`
 	BusinessAdditionMsg   string    `json:"business_addition_msg,omitempty"`
 }
 
@@ -129,7 +129,7 @@ type OrganizationInfo struct {
 type IdentityInfo struct {
 	IDDocType  string      `json:"id_doc_type"`
 	IDCardInfo *IDCardInfo `json:"id_card_info,omitempty"` //身份证信息
-	IDDocInfo  IDDocInfo   `json:"id_doc_info"`
+	IDDocInfo  *IDDocInfo   `json:"id_doc_info,omitempty"` //其他证件信息
 	Owner      bool        `json:"owner"`
 }
 
@@ -209,17 +209,17 @@ type BizStoreInfo struct {
 type MpInfo struct {
 	MpAppid    string    `json:"mp_appid,omitempty"`
 	MpSubAppid string    `json:"mp_sub_appid,omitempty"`
-	MpPics     *[]string `json:"mp_pics,omitempty"`
+	MpPics     []string `json:"mp_pics,omitempty"`
 }
 type MiniProgramInfo struct {
 	MiniProgramAppid    string    `json:"mini_program_appid,omitempty"`
 	MiniProgramSubAppid string    `json:"mini_program_sub_appid,omitempty"`
-	MiniProgramPics     *[]string `json:"mini_program_pics,omitempty"`
+	MiniProgramPics     []string `json:"mini_program_pics,omitempty"`
 }
 type AppInfo struct {
 	AppAppid    string   `json:"app_appid,omitempty"`
 	AppSubAppid string   `json:"app_sub_appid,omitempty"`
-	AppPics     []string `json:"app_pics"`
+	AppPics     []string `json:"app_pics,omitempty"`
 }
 type WebInfo struct {
 	Domain           string `json:"domain"`
@@ -227,9 +227,9 @@ type WebInfo struct {
 	WebAppid         string `json:"web_appid,omitempty"`
 }
 type WeworkInfo struct {
-	CorpID     string   `json:"corp_id,omitempty"`
+	//CorpID     string   `json:"corp_id,omitempty"`
 	SubCorpID  string   `json:"sub_corp_id,omitempty"`
-	WeworkPics []string `json:"wework_pics"`
+	WeworkPics []string `json:"wework_pics,omitempty"`
 }
 
 // e3 ------------------------------------------------------

@@ -1,5 +1,28 @@
 package custom
 
+type ReqPaymentQueryOrder struct {
+	Amount struct {
+		Currency      string `json:"currency"`
+		PayerCurrency string `json:"payer_currency"`
+		PayerTotal    int    `json:"payer_total"`
+		Total         int    `json:"total"`
+	} `json:"amount"`
+	Appid      string `json:"appid"`
+	Attach     string `json:"attach"`
+	BankType   string `json:"bank_type"`
+	Mchid      string `json:"mchid"`
+	OutTradeNo string `json:"out_trade_no"`
+	Payer      struct {
+		Openid string `json:"openid"`
+	} `json:"payer"`
+	PromotionDetail []interface{} `json:"promotion_detail"`
+	SuccessTime     string        `json:"success_time"`
+	TradeState      string        `json:"trade_state"`
+	TradeStateDesc  string        `json:"trade_state_desc"`
+	TradeType       string        `json:"trade_type"`
+	TransactionId   string        `json:"transaction_id"`
+}
+
 type ReqPaymentRefund struct {
 	SubMchid      string                `json:"sub_mchid"`
 	TransactionId string                `json:"transaction_id,omitempty"`

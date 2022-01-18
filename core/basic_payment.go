@@ -9,6 +9,68 @@ import (
 	"net/url"
 )
 
+//PaymentQueryOrderByTransactionId 查询订单-通过微信订单号
+func (c *PayClient) PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error) {
+	params := map[string]string{"transaction_id": transactionId}
+	qy := url.Values{}
+
+	resp := custom.ReqPaymentQueryOrder{}
+	if len(subMchId) > 0 {
+		//服务商模式
+		qy.Set("sp_mchid", mchID)
+		qy.Set("sub_mchid", subMchId[0])
+		body, err := c.doRequest(nil, utils.BuildUrl(params, qy, constant.APIPaymentPartnerQueryOrderByTransactionId), http.MethodGet)
+		if err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(body, &resp); err != nil {
+			return nil, err
+		}
+	} else {
+		qy.Set("mchid", mchID)
+		//直连商户模式
+		body, err := c.doRequest(nil, utils.BuildUrl(params, qy, constant.APIPaymentQueryOrderByTransactionId), http.MethodGet)
+		if err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(body, &resp); err != nil {
+			return nil, err
+		}
+	}
+	return &resp, nil
+}
+
+//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号
+func (c *PayClient) PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error) {
+	params := map[string]string{"out-trade-no": outTradeNo}
+	qy := url.Values{}
+
+	resp := custom.ReqPaymentQueryOrder{}
+	if len(subMchId) > 0 {
+		//服务商模式
+		qy.Set("sp_mchid", mchID)
+		qy.Set("sub_mchid", subMchId[0])
+		body, err := c.doRequest(nil, utils.BuildUrl(params, qy, constant.APIPaymentPartnerQueryOrderByOutTradeNo), http.MethodGet)
+		if err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(body, &resp); err != nil {
+			return nil, err
+		}
+	} else {
+		qy.Set("mchid", mchID)
+		//直连商户模式
+		body, err := c.doRequest(nil, utils.BuildUrl(params, qy, constant.APIPaymentQueryOrderByOutTradeNo), http.MethodGet)
+		if err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(body, &resp); err != nil {
+			return nil, err
+		}
+	}
+	return &resp, nil
+}
+
 //PaymentRefund 申请退款
 func (c *PayClient) PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIPaymentRefund), http.MethodPost)

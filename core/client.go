@@ -72,12 +72,16 @@ type Client interface {
 	//ApplyProfitSharingBill 申请分账账单
 	ApplyProfitSharingBill(billDate, subMchid, tarType string) (*custom.RespApplyTransactionBill, error)
 
+	//PaymentQueryOrderByTransactionId 查询订单-通过微信订单号(兼容服务商模式、直连商户模式)
+	PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
+	//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号(兼容服务商模式、直连商户模式)
+	PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
 	//PaymentRefund 基础支付-退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
 	//ApplyTransactionBill //申请交易账单
-	ApplyTransactionBill(billDate,subMchid, billType,tarType string) (*custom.RespApplyTransactionBill, error)
+	ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error)
 	//ApplyFundBill //申请资金账单
-	ApplyFundBill(billDate,accountType,tarType string) (*custom.RespApplyTransactionBill, error)
+	ApplyFundBill(billDate, accountType, tarType string) (*custom.RespApplyTransactionBill, error)
 
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)

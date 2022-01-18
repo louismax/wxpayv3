@@ -30,11 +30,15 @@ const (
 )
 
 const (
-	APIPaymentRefund          = "/v3/refund/domestic/refunds"                 //基础支付退款
-	APIPaymentQueryRefund     = "/v3/refund/domestic/refunds/{out_refund_no}" //退款查询
-	APIApplyTransactionBill   = "/v3/bill/tradebill"                          //申请交易账单
-	APIApplyFundBill          = "/v3/bill/fundflowbill"                       //申请资金账单
-	APIApplyProfitSharingBill = "/v3/profitsharing/bills"                     //申请分账账单
+	APIPaymentPartnerQueryOrderByTransactionId = "/v3/pay/partner/transactions/id/{transaction_id}"               //服务商通过微信订单号查询订单
+	APIPaymentQueryOrderByTransactionId        = "/v3/pay/transactions/id/{transaction_id}?mchid={mchid}"         //直连商户通过微信订单号查询订单
+	APIPaymentPartnerQueryOrderByOutTradeNo    = "/v3/pay/partner/transactions/out-trade-no/{out-trade-no}"       //服务商通过微信订单号查询订单
+	APIPaymentQueryOrderByOutTradeNo           = "/v3/pay/transactions/out-trade-no/{out-trade-no}?mchid={mchid}" //直连商户通过微信订单号查询订单
+	APIPaymentRefund                           = "/v3/refund/domestic/refunds"                                    //基础支付退款
+	APIPaymentQueryRefund                      = "/v3/refund/domestic/refunds/{out_refund_no}"                    //退款查询
+	APIApplyTransactionBill                    = "/v3/bill/tradebill"                                             //申请交易账单
+	APIApplyFundBill                           = "/v3/bill/fundflowbill"                                          //申请资金账单
+	APIApplyProfitSharingBill                  = "/v3/profitsharing/bills"                                        //申请分账账单
 
 )
 

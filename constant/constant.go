@@ -39,7 +39,8 @@ const (
 	APIApplyTransactionBill                    = "/v3/bill/tradebill"                                             //申请交易账单
 	APIApplyFundBill                           = "/v3/bill/fundflowbill"                                          //申请资金账单
 	APIApplyProfitSharingBill                  = "/v3/profitsharing/bills"                                        //申请分账账单
-
+	APIJSAPIOrdersForPartner                   = "/v3/pay/partner/transactions/jsapi"                             //服务商JSAPI下单
+	APIJSAPIOrders                             = "/v3/pay/transactions/jsapi"                                     //直连商户JSAPI下单
 )
 
 //教培续费通相关接口

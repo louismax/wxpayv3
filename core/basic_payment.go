@@ -140,3 +140,31 @@ func (c *PayClient) DownloadBill(downloadUrl string) ([]byte, error) {
 	}
 	return body, nil
 }
+
+//JSAPIOrders 直连商户JSAPI下单
+func (c *PayClient) JSAPIOrders(data custom.ReqJSAPIOrders) (*custom.RespJSAPIOrders, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIJSAPIOrders), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespJSAPIOrders{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+//JSAPIOrdersForPartner 服务商JSAPI下单
+func (c *PayClient) JSAPIOrdersForPartner(data custom.ReqJSAPIOrdersForPartner) (*custom.RespJSAPIOrders, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIJSAPIOrdersForPartner), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespJSAPIOrders{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}

@@ -82,6 +82,10 @@ type Client interface {
 	ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error)
 	//ApplyFundBill //申请资金账单
 	ApplyFundBill(billDate, accountType, tarType string) (*custom.RespApplyTransactionBill, error)
+	//JSAPIOrders 直连商户JSAPI下单
+	JSAPIOrders(data custom.ReqJSAPIOrders) (*custom.RespJSAPIOrders, error)
+	//JSAPIOrdersForPartner 服务商JSAPI下单
+	JSAPIOrdersForPartner(data custom.ReqJSAPIOrdersForPartner) (*custom.RespJSAPIOrders, error)
 
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)

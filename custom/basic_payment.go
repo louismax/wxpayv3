@@ -103,3 +103,94 @@ type RespApplyTransactionBill struct {
 	HashType    string `json:"hash_type"`
 	HashValue   string `json:"hash_value"`
 }
+
+type ReqJSAPIOrdersForPartner struct {
+	SpAppid     string  `json:"sp_appid"`
+	SpMchid     string  `json:"sp_mchid"`
+	SubAppid    string  `json:"sub_appid"`
+	SubMchid    string  `json:"sub_mchid"`
+	Description string  `json:"description"`
+	OutTradeNo  string  `json:"out_trade_no"`
+	TimeExpire  *string `json:"time_expire,omitempty"`
+	Attach      string  `json:"attach"`
+	NotifyUrl   string  `json:"notify_url"`
+	GoodsTag    string  `json:"goods_tag"`
+	Amount      struct {
+		Total    int    `json:"total"`
+		Currency string `json:"currency"`
+	} `json:"amount"`
+	Payer struct {
+		SpOpenid  string `json:"sp_openid"`
+		SubOpenid string `json:"sub_openid"`
+	} `json:"payer"`
+	Detail *struct {
+		CostPrice   int    `json:"cost_price"`
+		InvoiceId   string `json:"invoice_id"`
+		GoodsDetail *[]struct {
+			MerchantGoodsId  string `json:"merchant_goods_id"`
+			WechatPayGoodsId string `json:"wechatpay_goods_id"`
+			GoodsName        string `json:"goods_name"`
+			Quantity         int    `json:"quantity"`
+			UnitPrice        int    `json:"unit_price"`
+		} `json:"goods_detail,omitempty"`
+	} `json:"detail,omitempty"`
+	SceneInfo *struct {
+		PayerClientIp string `json:"payer_client_ip"`
+		DeviceId      string `json:"device_id"`
+		StoreInfo     struct {
+			Id       string `json:"id"`
+			Name     string `json:"name"`
+			AreaCode string `json:"area_code"`
+			Address  string `json:"address"`
+		} `json:"store_info"`
+	} `json:"scene_info,omitempty"`
+	SettleInfo struct {
+		ProfitSharing bool `json:"profit_sharing"`
+	} `json:"settle_info"`
+}
+
+type ReqJSAPIOrders struct {
+	Appid       string  `json:"appid"`
+	Mchid       string  `json:"mchid"`
+	Description string  `json:"description"`
+	OutTradeNo  string  `json:"out_trade_no"`
+	TimeExpire  *string `json:"time_expire,omitempty"`
+	Attach      string  `json:"attach"`
+	NotifyUrl   string  `json:"notify_url"`
+	GoodsTag    string  `json:"goods_tag"`
+	Amount      struct {
+		Total    int    `json:"total"`
+		Currency string `json:"currency"`
+	} `json:"amount"`
+	Payer struct {
+		Openid string `json:"openid"`
+	} `json:"payer"`
+	Detail *struct {
+		CostPrice   int    `json:"cost_price"`
+		InvoiceId   string `json:"invoice_id"`
+		GoodsDetail *[]struct {
+			MerchantGoodsId  string `json:"merchant_goods_id"`
+			WechatPayGoodsId string `json:"wechatpay_goods_id"`
+			GoodsName        string `json:"goods_name"`
+			Quantity         int    `json:"quantity"`
+			UnitPrice        int    `json:"unit_price"`
+		} `json:"goods_detail,omitempty"`
+	} `json:"detail,omitempty"`
+	SceneInfo *struct {
+		PayerClientIp string `json:"payer_client_ip"`
+		DeviceId      string `json:"device_id"`
+		StoreInfo     struct {
+			Id       string `json:"id"`
+			Name     string `json:"name"`
+			AreaCode string `json:"area_code"`
+			Address  string `json:"address"`
+		} `json:"store_info"`
+	} `json:"scene_info,omitempty"`
+	SettleInfo struct {
+		ProfitSharing bool `json:"profit_sharing"`
+	} `json:"settle_info"`
+}
+
+type RespJSAPIOrders struct {
+	PrepayId string `json:"prepay_id"`
+}

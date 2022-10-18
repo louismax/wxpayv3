@@ -26,11 +26,11 @@ type Client interface {
 	Certificate() (*custom.CertificateResp, error)
 	// SetClientPlatformCert 设置平台证书
 	SetClientPlatformCert(certificateStr string) error
-	// RsaEncryptByPrivateKey 使用商户私钥RAS加密敏感数据
+	// RsaEncryptByPrivateKey 使用商户私钥加密敏感数据
 	RsaEncryptByPrivateKey(origData []byte) (string, error)
-	// RsaDecryptByPrivateKey 使用商户私钥RAS解密敏感数据
+	// RsaDecryptByPrivateKey 使用商户私钥解密敏感数据
 	RsaDecryptByPrivateKey(ciphertext string) (string, error)
-	// RsaEncryptByPublicKey 使用平台公钥RAS加密敏感数据
+	// RsaEncryptByPublicKey 使用平台公钥加密敏感数据
 	RsaEncryptByPublicKey(plaintext string) (string, error)
 	// Decrypt 通知密文数据使用V3Key解密 （AEAD_AES_256_GCM）
 	Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error)
@@ -136,6 +136,15 @@ type Client interface {
 	GetAuthInfo(data custom.ReqGetAuthInfo) (*custom.RespGetAuthInfo, error)
 	// GetRepaymentUrl 获取还款链接
 	GetRepaymentUrl(data custom.ReqGetRepaymentUrl) (*custom.RespGetRepaymentUrl, error)
+
+	//SmartGuideRegister 服务人员注册
+	SmartGuideRegister(data custom.ReqSmartGuideRegister) (*custom.RespSmartGuideRegister, error)
+	//SmartGuideAssign 服务人员分配
+	SmartGuideAssign(guideId string, data custom.ReqSmartGuideAssign) error
+	//SmartGuideQuery 服务人员查询
+	SmartGuideQuery(storeId, subMchid, userId, mobile, workId, limit, offset string) (*custom.RespSmartGuideQuery, error)
+	//SmartGuideUpdate 服务人员信息更新
+	SmartGuideUpdate(guideId string, data custom.ReqSmartGuideUpdate) error
 }
 
 //PayClient PayClient

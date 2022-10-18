@@ -85,3 +85,10 @@ const (
 	APIAddProfitSharingReceiver          = "/v3/profitsharing/receivers/add"                                                                   //添加分账接收方
 	APIDeleteProfitSharingReceiver       = "/v3/profitsharing/receivers/delete"                                                                //删除分账接收方
 )
+
+const (
+	APISmartGuideRegister = "/v3/smartguide/guides"                   //服务人员注册
+	APISmartGuideAssign   = "/v3/smartguide/guides/{guide_id}/assign" //服务人员分配
+	APISmartGuideQuery    = "/v3/smartguide/guides"                   //服务人员查询
+	APISmartGuideUpdate   = "/v3/smartguide/guides/{guide_id}"        //服务人员信息更新
+)

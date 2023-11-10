@@ -32,7 +32,7 @@ type Client interface {
 	RsaDecryptByPrivateKey(ciphertext string) (string, error)
 	// RsaEncryptByPublicKey 使用平台公钥加密敏感数据
 	RsaEncryptByPublicKey(plaintext string) (string, error)
-	// Decrypt 通知密文数据使用V3Key解密 （AEAD_AES_256_GCM）
+	// Decrypt 通知密文数据使用V3Key解密 （AES_256_GCM）
 	Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error)
 
 	// UploadImage 上传图片（获取MediaId）
@@ -145,6 +145,21 @@ type Client interface {
 	SmartGuideQuery(storeId, subMchid, userId, mobile, workId, limit, offset string) (*custom.RespSmartGuideQuery, error)
 	//SmartGuideUpdate 服务人员信息更新
 	SmartGuideUpdate(guideId string, data custom.ReqSmartGuideUpdate) error
+
+	// EduSchoolPayPreSign 校园轻松付预签约
+	EduSchoolPayPreSign(data custom.ReqEduSchoolPayPreSign) (*custom.RespEduSchoolPayPreSign, error)
+	// EduSchoolPayContractQueryById 校园轻松付通过协议号查询签约
+	EduSchoolPayContractQueryById(contractId string) (*custom.RespEduSchoolPayContractQuery, error)
+	// DissolveEduSchoolPayContract 校园轻松付解约
+	DissolveEduSchoolPayContract(contractId string) error
+	// EduSchoolPayContractQueryByOpenId 校园轻松付查询用户签约列表
+	EduSchoolPayContractQueryByOpenId(openId string, query url.Values) (*custom.RespEduSchoolPayContractQueryPage, error)
+	// EduSchoolPayTransactions 校园轻松付扣款
+	EduSchoolPayTransactions(data custom.ReqEduSchoolPayTransactions) (*custom.RespEduSchoolPayTransactions, error)
+	// EduSchoolPayQueryOrderByTransactionId 校园轻松付微信支付订单号查单
+	EduSchoolPayQueryOrderByTransactionId(transactionId string, query url.Values) (*custom.RespEduSchoolPayTransactions, error)
+	// EduSchoolPayQueryOrderByOutTradeNo 校园轻松付商户订单号查单
+	EduSchoolPayQueryOrderByOutTradeNo(outTradeNo string, query url.Values) (*custom.RespEduSchoolPayTransactions, error)
 }
 
 //PayClient PayClient
@@ -209,7 +224,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	return body, nil
 }
 
-//Decrypt Decrypt
+//Decrypt Decrypt解密
 func (c *PayClient) Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error) {
 	// 默认使用AEAD_AES_256_GCM
 	switch algorithm {

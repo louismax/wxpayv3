@@ -92,3 +92,13 @@ const (
 	APISmartGuideQuery    = "/v3/smartguide/guides"                   //服务人员查询
 	APISmartGuideUpdate   = "/v3/smartguide/guides/{guide_id}"        //服务人员信息更新
 )
+
+const (
+	APIEduSchoolPayPreSign                   = "/v3/eduschoolpay/contracts/presign"                        //校园轻松付预签约
+	APIEduSchoolPayContractQueryById         = "/v3/eduschoolpay/contracts/{contract_id}"                  //通过协议号查询签约
+	APIDissolveEduSchoolPayContract          = "/v3/eduschoolpay/contracts/{contract_id}/terminate"        //解约
+	APIEduSchoolPayContractQueryByOpenId     = "/v3/eduschoolpay/users/{openid}/contracts"                 //查询用户签约列表
+	APIEduSchoolPayTransactions              = "/v3/eduschoolpay/transactions"                             //扣款
+	APIEduSchoolPayQueryOrderByTransactionId = "/v3/eduschoolpay/transactions/id/{transaction_id}"         //使用微信单号查单
+	APIEduSchoolPayQueryOrderByOutTradeNo    = "/v3/eduschoolpay/transactions/out-trade-no/{out_trade_no}" //使用商户订单号查单
+)

@@ -18,7 +18,7 @@ import (
 	"net/url"
 )
 
-//Client is Client
+// Client is Client
 type Client interface {
 	// Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
@@ -76,8 +76,10 @@ type Client interface {
 	PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
 	//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号(兼容服务商模式、直连商户模式)
 	PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
-	//PaymentRefund 基础支付-退款
+	//PaymentRefund 直连商户退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
+	//PaymentRefundForPartner 服务商退款
+	PaymentRefundForPartner(data custom.ReqPaymentRefundForPartner) (*custom.RespPaymentRefund, error)
 	//ApplyTransactionBill //申请交易账单
 	ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error)
 	//ApplyFundBill //申请资金账单
@@ -162,7 +164,7 @@ type Client interface {
 	EduSchoolPayQueryOrderByOutTradeNo(outTradeNo string, query url.Values) (*custom.RespEduSchoolPayTransactions, error)
 }
 
-//PayClient PayClient
+// PayClient PayClient
 type PayClient struct {
 	MchId               string            // 商户号
 	ApiV3Key            string            // apiV3密钥
@@ -224,7 +226,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	return body, nil
 }
 
-//Decrypt Decrypt解密
+// Decrypt Decrypt解密
 func (c *PayClient) Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error) {
 	// 默认使用AEAD_AES_256_GCM
 	switch algorithm {
@@ -276,7 +278,7 @@ func (c *PayClient) RsaDecryptByPrivateKey(ciphertext string) (string, error) {
 	return string(plaintext), nil
 }
 
-//RsaEncryptByPublicKey 使用平台公钥RSA加密
+// RsaEncryptByPublicKey 使用平台公钥RSA加密
 func (c *PayClient) RsaEncryptByPublicKey(plaintext string) (string, error) {
 	if c.PlatformSerialNo == "" || c.PlatformCertificate == nil {
 		return "", fmt.Errorf("请先初始化平台证书")

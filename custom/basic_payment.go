@@ -24,6 +24,17 @@ type ReqPaymentQueryOrder struct {
 }
 
 type ReqPaymentRefund struct {
+	TransactionId string                `json:"transaction_id,omitempty"`
+	OutTradeNo    string                `json:"out_trade_no,omitempty"`
+	OutRefundNo   string                `json:"out_refund_no"`
+	Reason        string                `json:"reason,omitempty"`
+	NotifyUrl     string                `json:"notify_url,omitempty"`
+	FundsAccount  string                `json:"funds_account,omitempty"`
+	Amount        PaymentRefundAmount   `json:"amount"`
+	GoodsDetail   *[]PaymentGoodsDetail `json:"goods_detail,omitempty"`
+}
+
+type ReqPaymentRefundForPartner struct {
 	SubMchid      string                `json:"sub_mchid"`
 	TransactionId string                `json:"transaction_id,omitempty"`
 	OutTradeNo    string                `json:"out_trade_no,omitempty"`

@@ -9,7 +9,7 @@ import (
 	"net/url"
 )
 
-//PaymentQueryOrderByTransactionId 查询订单-通过微信订单号
+// PaymentQueryOrderByTransactionId 查询订单-通过微信订单号
 func (c *PayClient) PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error) {
 	params := map[string]string{"transaction_id": transactionId}
 	qy := url.Values{}
@@ -40,7 +40,7 @@ func (c *PayClient) PaymentQueryOrderByTransactionId(transactionId, mchID string
 	return &resp, nil
 }
 
-//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号
+// PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号
 func (c *PayClient) PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error) {
 	params := map[string]string{"out-trade-no": outTradeNo}
 	qy := url.Values{}
@@ -71,7 +71,7 @@ func (c *PayClient) PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subM
 	return &resp, nil
 }
 
-//PaymentRefund 申请退款
+// PaymentRefund 直连商户申请退款
 func (c *PayClient) PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIPaymentRefund), http.MethodPost)
 	if err != nil {
@@ -85,7 +85,21 @@ func (c *PayClient) PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPay
 	return &resp, nil
 }
 
-//ApplyTransactionBill 申请交易账单
+// PaymentRefundForPartner 服务商申请退款
+func (c *PayClient) PaymentRefundForPartner(data custom.ReqPaymentRefundForPartner) (*custom.RespPaymentRefund, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIPaymentRefund), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespPaymentRefund{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// ApplyTransactionBill 申请交易账单
 func (c *PayClient) ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error) {
 	qy := url.Values{}
 	qy.Set("bill_date", billDate)
@@ -110,7 +124,7 @@ func (c *PayClient) ApplyTransactionBill(billDate, subMchid, billType, tarType s
 	return &resp, nil
 }
 
-//ApplyFundBill 申请资金账单
+// ApplyFundBill 申请资金账单
 func (c *PayClient) ApplyFundBill(billDate, accountType, tarType string) (*custom.RespApplyTransactionBill, error) {
 	qy := url.Values{}
 	qy.Set("bill_date", billDate)
@@ -132,7 +146,7 @@ func (c *PayClient) ApplyFundBill(billDate, accountType, tarType string) (*custo
 	return &resp, nil
 }
 
-//DownloadBill 下载账单
+// DownloadBill 下载账单
 func (c *PayClient) DownloadBill(downloadUrl string) ([]byte, error) {
 	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, downloadUrl), http.MethodGet, true)
 	if err != nil {
@@ -141,7 +155,7 @@ func (c *PayClient) DownloadBill(downloadUrl string) ([]byte, error) {
 	return body, nil
 }
 
-//JSAPIOrders 直连商户JSAPI下单
+// JSAPIOrders 直连商户JSAPI下单
 func (c *PayClient) JSAPIOrders(data custom.ReqJSAPIOrders) (*custom.RespJSAPIOrders, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIJSAPIOrders), http.MethodPost)
 	if err != nil {
@@ -155,7 +169,7 @@ func (c *PayClient) JSAPIOrders(data custom.ReqJSAPIOrders) (*custom.RespJSAPIOr
 	return &resp, nil
 }
 
-//JSAPIOrdersForPartner 服务商JSAPI下单
+// JSAPIOrdersForPartner 服务商JSAPI下单
 func (c *PayClient) JSAPIOrdersForPartner(data custom.ReqJSAPIOrdersForPartner) (*custom.RespJSAPIOrders, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIJSAPIOrdersForPartner), http.MethodPost)
 	if err != nil {

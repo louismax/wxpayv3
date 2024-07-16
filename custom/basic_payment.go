@@ -91,6 +91,7 @@ type RespPaymentRefund struct {
 		SettlementTotal  int    `json:"settlement_total"`
 		DiscountRefund   int    `json:"discount_refund"`
 		Currency         string `json:"currency"`
+		RefundFee        int    `json:"refund_fee"`
 	} `json:"amount"`
 	PromotionDetail []struct {
 		PromotionId  string `json:"promotion_id"`

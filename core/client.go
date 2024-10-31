@@ -162,6 +162,15 @@ type Client interface {
 	EduSchoolPayQueryOrderByTransactionId(transactionId string, query url.Values) (*custom.RespEduSchoolPayTransactions, error)
 	// EduSchoolPayQueryOrderByOutTradeNo 校园轻松付商户订单号查单
 	EduSchoolPayQueryOrderByOutTradeNo(outTradeNo string, query url.Values) (*custom.RespEduSchoolPayTransactions, error)
+
+	//QueryViolationNotifications 查询商户违规通知回调地址
+	QueryViolationNotifications() (*custom.GeneralViolationNotifications, error)
+	//CreateViolationNotifications 创建商户违规通知回调地址
+	CreateViolationNotifications(data custom.GeneralViolationNotifications) (*custom.GeneralViolationNotifications, error)
+	//UpdateViolationNotifications 修改商户违规通知回调地址
+	UpdateViolationNotifications(data custom.GeneralViolationNotifications) (*custom.GeneralViolationNotifications, error)
+	//DeleteViolationNotifications 删除商户违规通知回调地址
+	DeleteViolationNotifications() error
 }
 
 // PayClient PayClient

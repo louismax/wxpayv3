@@ -102,3 +102,5 @@ const (
 	APIEduSchoolPayQueryOrderByTransactionId = "/v3/eduschoolpay/transactions/id/{transaction_id}"         //使用微信单号查单
 	APIEduSchoolPayQueryOrderByOutTradeNo    = "/v3/eduschoolpay/transactions/out-trade-no/{out_trade_no}" //使用商户订单号查单
 )
+
+const APIViolationNotifications = "/v3/merchant-risk-manage/violation-notifications" //商户违规通知

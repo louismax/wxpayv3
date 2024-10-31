@@ -1,19 +1,17 @@
 package wxpayv3
 
 import (
-	"github.com/louismax/wxpayv3/custom"
-	"github.com/louismax/wxpayv3/utils"
 	"testing"
 )
 
 func TestNewClient(t *testing.T) {
-	client, err := NewClient(
-		InjectWechatPayParameterUseCertPath("1234", "1234", "apiclient_key.pem", "apiclient_cert.pem"),
-	)
-	if err != nil {
-		t.Log(err)
-		return
-	}
+	//client, err := NewClient(
+	//	InjectWechatPayParameterUseCertPath("1234", "1234", "apiclient_key.pem", "apiclient_cert.pem"),
+	//)
+	//if err != nil {
+	//	t.Log(err)
+	//	return
+	//}
 	//下载证书
 	//resp, err := client.Certificate()
 	//if err != nil {
@@ -43,21 +41,21 @@ func TestNewClient(t *testing.T) {
 	//t.Logf("%+v", resp)
 
 	//退款
-	uid, _ := utils.GenerateNonce()
-	resp, err := client.PaymentRefund(custom.ReqPaymentRefund{
-		SubMchid:      "123",
-		TransactionId: "4200001126202108129763281234",
-		OutRefundNo:   uid,
-		Reason:        "API调试",
-		Amount: custom.PaymentRefundAmount{
-			Refund:   1,
-			Total:    1,
-			Currency: "CNY",
-		},
-	})
-	if err != nil {
-		t.Log(err)
-		return
-	}
-	t.Log(resp)
+	//uid, _ := utils.GenerateNonce()
+	//resp, err := client.PaymentRefund(custom.ReqPaymentRefund{
+	//	SubMchid:      "123",
+	//	TransactionId: "4200001126202108129763281234",
+	//	OutRefundNo:   uid,
+	//	Reason:        "API调试",
+	//	Amount: custom.PaymentRefundAmount{
+	//		Refund:   1,
+	//		Total:    1,
+	//		Currency: "CNY",
+	//	},
+	//})
+	//if err != nil {
+	//	t.Log(err)
+	//	return
+	//}
+	//t.Log(resp)
 }

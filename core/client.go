@@ -76,6 +76,8 @@ type Client interface {
 	PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
 	//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号(兼容服务商模式、直连商户模式)
 	PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
+	//PaymentCloseOrder 关闭订单(兼容服务商模式、直连商户模式)
+	PaymentCloseOrder(outTradeNo, mchID string, subMchId ...string) error
 	//PaymentRefund 直连商户退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
 	//PaymentRefundForPartner 服务商退款
@@ -186,6 +188,7 @@ type PayClient struct {
 }
 
 func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string, isCheck ...bool) ([]byte, error) {
+	fmt.Println(url)
 	var data []byte
 	if requestData != nil {
 		var err error

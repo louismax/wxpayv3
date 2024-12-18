@@ -71,6 +71,32 @@ func (c *PayClient) PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subM
 	return &resp, nil
 }
 
+// PaymentCloseOrder 关闭订单
+func (c *PayClient) PaymentCloseOrder(outTradeNo, mchID string, subMchId ...string) error {
+	params := map[string]string{"out_trade_no": outTradeNo}
+	if len(subMchId) > 0 {
+		//服务商模式
+		reqData := map[string]interface{}{
+			"sp_mchid":  mchID,
+			"sub_mchid": subMchId[0],
+		}
+		_, err := c.doRequest(reqData, utils.BuildUrl(params, nil, constant.APIPaymentPartnerCloseOrder), http.MethodPost)
+		if err != nil {
+			return err
+		}
+	} else {
+		//直连商户模式
+		reqData := map[string]interface{}{
+			"mchid": mchID,
+		}
+		_, err := c.doRequest(reqData, utils.BuildUrl(params, nil, constant.APIPaymentCloseOrder), http.MethodPost)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // PaymentRefund 直连商户申请退款
 func (c *PayClient) PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIPaymentRefund), http.MethodPost)

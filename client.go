@@ -1,13 +1,14 @@
 package wxpayv3
 
 import (
+	"crypto/x509"
 	"fmt"
 	"github.com/louismax/wxpayv3/constant"
 	"github.com/louismax/wxpayv3/core"
 	"net/http"
 )
 
-//NewClient NewClient
+// NewClient NewClient
 func NewClient(opts ...core.ClientOption) (core.Client, error) {
 	settings := &core.DialSettings{}
 	for _, opt := range opts {
@@ -25,15 +26,19 @@ func NewClient(opts ...core.ClientOption) (core.Client, error) {
 	}
 
 	client := &core.PayClient{
-		MchId:               settings.MchId,
-		ApiV3Key:            settings.ApiV3Key,
-		ApiSerialNo:         settings.ApiSerialNo,
-		ApiPrivateKey:       settings.ApiPrivateKey,
-		ApiCertificate:      settings.ApiCertificate,
-		PlatformSerialNo:    settings.PlatformSerialNo,
-		PlatformCertificate: settings.PlatformCertificate,
-		HttpClient:          settings.HttpClient,
+		MchId:                   settings.MchId,
+		ApiV3Key:                settings.ApiV3Key,
+		ApiSerialNo:             settings.ApiSerialNo,
+		ApiPrivateKey:           settings.ApiPrivateKey,
+		ApiCertificate:          settings.ApiCertificate,
+		DefaultPlatformSerialNo: settings.DefaultSerialNo,
+		PlatformCertMap:         settings.PlatformCertMap,
+		WechatPayPublicKeyID:    settings.WechatPayPublicKeyID,
+		WechatPayPublicKey:      settings.WechatPayPublicKey,
+		HttpClient:              settings.HttpClient,
 	}
+	client.PlatformCertMap = make(map[string]*x509.Certificate)
+	client.PlatformCertMap = settings.PlatformCertMap
 
 	return client, nil
 }

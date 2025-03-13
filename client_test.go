@@ -1,61 +1,91 @@
 package wxpayv3
 
 import (
+	"github.com/louismax/wxpayv3/core"
 	"testing"
 )
 
-func TestNewClient(t *testing.T) {
-	//client, err := NewClient(
-	//	InjectWechatPayParameterUseCertPath("1234", "1234", "apiclient_key.pem", "apiclient_cert.pem"),
-	//)
-	//if err != nil {
-	//	t.Log(err)
-	//	return
-	//}
-	//下载证书
-	//resp, err := client.Certificate()
-	//if err != nil {
-	//	t.Log(err)
-	//	return
-	//}
-	//
-	//for _, v := range resp.Data {
-	//	t.Logf("%+v", *v)
-	//	t.Logf("%+v", *v.EncryptCertificate)
-	//}
+func TestNewClient1(t *testing.T) {
+	client, err := NewClient(
+		InjectWxPayMchParamExtra("MCH_ID", "API_V3_KEY", "private_key.pem file path", "private_cert.pem file path"),
+	)
+	if err != nil {
+		t.Log(err)
+		return
+	}
 
-	//获取结算账号
-	//resp, err := client.QuerySettlementAccount("1609337198")
-	//if err != nil {
-	//	t.Log(err)
-	//	return
-	//}
-	//t.Log(resp)
+	//获取微信平台证书
+	resp, err := client.GetCertificate()
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	t.Log(resp)
+}
 
-	//上传图片
-	//resp, err := client.UploadImage("./1.jpg")
-	//if err != nil {
-	//	t.Log(err)
-	//	return
-	//}
-	//t.Logf("%+v", resp)
+func TestNewClient2(t *testing.T) {
+	pk, err := core.LoadPrivateKey(`-----BEGIN PRIVATE KEY-----
+XXXX商户私钥文本内容...
+-----END PRIVATE KEY-----`)
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	client, err := NewClient(
+		InjectWxPayMchParamFull("1607549129", core.ApiCert{
+			ApiSerialNo:   "ApiSerialNo",
+			ApiPrivateKey: pk,
+		}, "API_V3_KEY"),
+	)
+	if err != nil {
+		t.Log(err)
+		return
+	}
 
-	//退款
-	//uid, _ := utils.GenerateNonce()
-	//resp, err := client.PaymentRefund(custom.ReqPaymentRefund{
-	//	SubMchid:      "123",
-	//	TransactionId: "4200001126202108129763281234",
-	//	OutRefundNo:   uid,
-	//	Reason:        "API调试",
-	//	Amount: custom.PaymentRefundAmount{
-	//		Refund:   1,
-	//		Total:    1,
-	//		Currency: "CNY",
-	//	},
-	//})
-	//if err != nil {
-	//	t.Log(err)
-	//	return
-	//}
-	//t.Log(resp)
+	resp, err := client.PaymentQueryOrderByOutTradeNo("OUT_TRADE_NO", "MCH_ID", "SUB_MCH_ID")
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	t.Log(resp)
+}
+
+func TestLoadPlatformCertStr(t *testing.T) {
+	client, err := NewClient(
+		InjectWxPayMchParamExtra("MCH_ID", "API_V3_KEY", "private_key.pem file path", "private_cert.pem file path"),
+		InjectWxPayPlatformCert([]string{`-----BEGIN CERTIFICATE-----
+平台证书文本内容...
+-----END CERTIFICATE-----`}),
+	)
+	if err != nil {
+		t.Log(err)
+		return
+	}
+
+	resp, err := client.PaymentQueryOrderByOutTradeNo("OUT_TRADE_NO", "MCH_ID", "SUB_MCH_ID")
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	t.Log(resp)
+
+}
+
+func TestLoadPlatformCertFile(t *testing.T) {
+	client, err := NewClient(
+		InjectWxPayMchParamExtra("MCH_ID", "API_V3_KEY", "private_key.pem file path", "private_cert.pem file path"),
+		InjectWxPayPlatformCertUseCertPath([]string{"pub_cert.pem  file path"}),
+	)
+	if err != nil {
+		t.Log(err)
+		return
+	}
+
+	resp, err := client.PaymentQueryOrderByOutTradeNo("OUT_TRADE_NO", "MCH_ID", "SUB_MCH_ID")
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	t.Log(resp)
+
 }

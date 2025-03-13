@@ -35,3 +35,5 @@ xp_k.pem
 local_test.go
 LEZGitoconaBSYXool3Cu.jpg
 local_client_test.go
+pub_cert.pem
+pub_key.pem

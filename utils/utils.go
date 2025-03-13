@@ -28,7 +28,7 @@ const (
 	NonceLength = 32
 )
 
-//GenerateNonce 生成32位随机字符串
+// GenerateNonce 生成32位随机字符串
 func GenerateNonce() (string, error) {
 	bs := make([]byte, NonceLength)
 	_, err := rand.Read(bs)
@@ -42,7 +42,7 @@ func GenerateNonce() (string, error) {
 	return string(bs), nil
 }
 
-//BuildMessage BuildMessage
+// BuildMessage BuildMessage
 func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr string, timestamp int64) ([]byte, error) {
 	parsedUrl, err := url.Parse(urlString)
 	if err != nil {
@@ -72,7 +72,7 @@ func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr str
 	return buffer.Bytes(), nil
 }
 
-//Sign Sign
+// Sign Sign
 func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 	h := sha256.New()
 	h.Write(message)
@@ -83,14 +83,14 @@ func Sign(message []byte, privateKey *rsa.PrivateKey) (string, error) {
 	return base64.StdEncoding.EncodeToString(signature), nil
 }
 
-//BuildUrl BuildUrl
+// BuildUrl BuildUrl
 func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) string {
 	urlX := constant.ApiDomain
 	for _, route := range subRoutes {
-		if strings.Contains(route, constant.ApiDomain){
+		if strings.Contains(route, constant.ApiDomain) {
 			urlX = route
 			break
-		}else{
+		} else {
 			urlX += strings.TrimLeft(route, "/")
 		}
 	}
@@ -104,7 +104,7 @@ func BuildUrl(params map[string]string, query url.Values, subRoutes ...string) s
 	return urlX
 }
 
-//FaceMessageDecryption 无需初始化客户端的进行离线团餐人脸报文解密
+// FaceMessageDecryption 无需初始化客户端的进行离线团餐人脸报文解密
 func FaceMessageDecryption(data custom.FaceMessageCiphertext, apiV3Key string) (*custom.FaceMessagePlaintext, error) {
 	// 对编码密文进行base64解码
 	decodeBytes, err := base64.StdEncoding.DecodeString(data.Resource.Ciphertext)

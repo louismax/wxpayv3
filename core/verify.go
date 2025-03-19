@@ -49,7 +49,7 @@ func (c *PayClient) VerifyResponse(httpStatus int, header *http.Header, body []b
 	headerSignature := c.getWechatPaySignature(header) //获取应答签名值
 	headerTimestamp := c.getWechatPayTimestamp(header) //获取应答时间戳
 	headerNonce := c.getWechatPayNonce(header)         //获取应答随机串
-	return c.verify(c.getRequestId(header), headerSerial, headerSignature, headerTimestamp, headerNonce, body)
+	return c.verify(headerSerial, headerSignature, headerTimestamp, headerNonce, body)
 }
 
 func (c *PayClient) getRequestId(header *http.Header) string {
@@ -76,7 +76,12 @@ func (c *PayClient) getWechatPayNonce(header *http.Header) string {
 	return header.Get("Wechatpay-Nonce")
 }
 
-func (c *PayClient) verify(requestId, headerSerial string, headerSignature string, headerTimestamp string, headerNonce string, body []byte) error {
+func (c *PayClient) verify(headerSerial string, headerSignature string, headerTimestamp string, headerNonce string, body []byte) error {
+	if headerSerial == "" {
+		//没有证书序列号,直接不用验签？！
+		fmt.Printf("\033[33m%s\n", "[Warning]--WxPayV3:当前请求应答结果中不存在Wechatpay-Serial,请注意应答来源是否合法！！！")
+		return nil
+	}
 	switch {
 	case headerSignature == "":
 		return fmt.Errorf("微信支付签名参数无效")
@@ -99,11 +104,25 @@ func (c *PayClient) verify(requestId, headerSerial string, headerSignature strin
 
 	//判断Serial是平台证书还是平台公钥
 	if strings.Contains(headerSerial, "PUB_KEY_ID_") {
-
+		if c.WechatPayPublicKeyID != "" && c.WechatPayPublicKey != nil {
+			fmt.Printf("\033[35m%s\n", "[Info]--WxPayV3:使用微信支付平台公钥验签,应答中的公钥ID:"+headerSerial)
+			if headerSerial == c.WechatPayPublicKeyID {
+				err = c.verifySignatureByPubKey(string(decodedSignature), verificationStr)
+				if err != nil {
+					fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:签名校验失败！"+err.Error())
+					return fmt.Errorf("签名校验失败！err:%s", err.Error())
+				}
+				fmt.Printf("\033[32m%s\n", "[Info]--WxPayV3:请求应答签名校验通过!")
+			} else {
+				fmt.Printf("\033[33m%s\n", "[Warning]--WxPayV3:当前实例配置的平台公钥ID与应答结果中的公钥ID不匹配,请确认请求来源是否合法或平台公钥是否更新！！！")
+			}
+		} else {
+			fmt.Printf("\033[33m%s\n", "[Warning]--WxPayV3:当前实例未配置平台公钥,无法进行应答结果签名验证！请通过配置平台平台公钥进行验签,确保请求应答来源为微信支付服务端！")
+		}
 	} else {
 		//通过平台证书
 		if _, ok := c.PlatformCertMap[headerSerial]; ok {
-			fmt.Printf("\033[35m%s\n", "[Info]--WxPayV3:使用微信支付平台证书做请求应答验签,应答中的平台证书编号为:"+headerSerial)
+			fmt.Printf("\033[35m%s\n", "[Info]--WxPayV3:使用微信支付平台证书验签,应答中的证书编号:"+headerSerial)
 			err = c.verifySignature(headerSerial, string(decodedSignature), verificationStr)
 			if err != nil {
 				fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:签名校验失败！"+err.Error())
@@ -139,4 +158,10 @@ func (c *PayClient) verifySignature(headerSerial, signature string, verification
 	h := sha256.New()
 	h.Write(verificationStr)
 	return rsa.VerifyPKCS1v15(c.PlatformCertMap[headerSerial].PublicKey.(*rsa.PublicKey), crypto.SHA256, h.Sum(nil), []byte(signature))
+}
+
+func (c *PayClient) verifySignatureByPubKey(signature string, verificationStr []byte) error {
+	h := sha256.New()
+	h.Write(verificationStr)
+	return rsa.VerifyPKCS1v15(c.WechatPayPublicKey, crypto.SHA256, h.Sum(nil), []byte(signature))
 }

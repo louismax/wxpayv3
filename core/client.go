@@ -176,6 +176,9 @@ type Client interface {
 	UpdateViolationNotifications(data custom.GeneralViolationNotifications) (*custom.GeneralViolationNotifications, error)
 	//DeleteViolationNotifications 删除商户违规通知回调地址
 	DeleteViolationNotifications() error
+
+	// QueryComplaintsList 查询投诉单列表(兼容服务商模式、直连商户模式)
+	QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error)
 }
 
 // PayClient PayClient
@@ -203,7 +206,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	}
 	authorization, err := c.Authorization(httpMethod, url, data)
 
-	//告诉微信需要什么验签方式,2025年开始,优先使用微信平台公钥，不存在使用微信平台证书，还不存在不传
+	//告诉微信需要什么验签方式,2025年开始,优先使用微信平台公钥，不存在时使用微信平台证书，还不存在不传(部分做了敏感数据加密的接口必传)
 	serial := ""
 	if c.WechatPayPublicKeyID != "" {
 		serial = c.WechatPayPublicKeyID

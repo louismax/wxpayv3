@@ -11,16 +11,16 @@ const (
 	DefaultTimeout = 30 * time.Second
 )
 
-//ApiDomain ApiDomain
+// ApiDomain ApiDomain
 const ApiDomain = "https://api.mch.weixin.qq.com/"
 
-//基础类接口
+// 基础类接口
 const (
 	ApiCertification = "/v3/certificates"          // 平台证书下载
 	ApiUploadImage   = "/v3/merchant/media/upload" //图片上传
 )
 
-//服务商特约商户进件类接口
+// 服务商特约商户进件类接口
 const (
 	APIIncomingSubmitApplication          = "/v3/applyment4sub/applyment/"                              //提交进件申请单
 	APIModifySettlement                   = "/v3/apply4sub/sub_merchants/{sub_mchid}/modify-settlement" //修改结算账号
@@ -45,7 +45,7 @@ const (
 	APIJSAPIOrders                             = "/v3/pay/transactions/jsapi"                                     //直连商户JSAPI下单
 )
 
-//教培续费通相关接口
+// 教培续费通相关接口
 const (
 	APIEduPaPayPresign                   = "/v3/edu-papay/contracts/presign"                        //预签约
 	APIEduPaPayContractQueryById         = "/v3/edu-papay/contracts/id/{contract_id}"               //通过签约ID查询签约
@@ -57,7 +57,7 @@ const (
 	APIEduPaPayQueryOrderByOutTradeNo    = "/v3/edu-papay/transactions/out-trade-no/{out_trade_no}" //教培通使用商户订单号查单
 )
 
-//K12离线团餐类接口
+// K12离线团餐类接口
 const (
 	APIQueryOrganizationInfoById   = "/v3/offlinefacemch/organizations?organization_id={organization_id}"                                                                           //根据机构ID查询机构信息
 	APIQueryOrganizationInfoByName = "/v3/offlinefacemch/organizations?organization_name={organization_name}"                                                                       //根据机构名称查询机构信息
@@ -106,3 +106,7 @@ const (
 )
 
 const APIViolationNotifications = "/v3/merchant-risk-manage/violation-notifications" //商户违规通知
+
+const (
+	APIComplaintsList = "/v3/merchant-service/complaints-v2" //申请交易账单
+)

@@ -33,8 +33,10 @@ type Client interface {
 	RsaEncryptByPrivateKey(origData []byte) (string, error)
 	// RsaDecryptByPrivateKey 使用商户私钥解密敏感数据
 	RsaDecryptByPrivateKey(ciphertext string) (string, error)
-	// RsaEncryptByPublicKey 使用平台公钥加密敏感数据
-	RsaEncryptByPublicKey(plaintext string) (string, error)
+	// RsaEncryptByWxPayPubCertKey 使用微信支付平台证书公钥RSA加密
+	RsaEncryptByWxPayPubCertKey(plaintext string) (string, error)
+	// RsaEncryptByWxPayPubKey 使用微信支付平台公钥RSA加密
+	RsaEncryptByWxPayPubKey(plaintext string) (string, error)
 	// Decrypt 通知密文数据使用V3Key解密 （AES_256_GCM）
 	Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error)
 
@@ -68,7 +70,7 @@ type Client interface {
 	QueryRemainingFrozenAmount(transactionId string) (*custom.RespQueryRemainingFrozenAmount, error)
 	//QueryMaximumSplitRatio 查询子商户最大分账比例
 	QueryMaximumSplitRatio(subMchid string) (*custom.RespQueryMaximumSplitRatio, error)
-	//AddProfitSharingReceiver 添加分账接收方
+	//AddProfitSharingReceiver 添加分账接收方(注意,默认会做敏感数据加密,如果不需要加密,请传入noEny参数) 兼容服务商、直连商户
 	AddProfitSharingReceiver(data custom.ReqAddProfitSharingReceiver) (*custom.RespAddProfitSharingReceiver, error)
 	//DeleteProfitSharingReceiver 删除分账接收方
 	DeleteProfitSharingReceiver(data custom.ReqDeleteProfitSharingReceiver) (*custom.RespDeleteProfitSharingReceiver, error)
@@ -299,8 +301,8 @@ func (c *PayClient) RsaDecryptByPrivateKey(ciphertext string) (string, error) {
 	return string(plaintext), nil
 }
 
-// RsaEncryptByPublicKey 使用平台证书RSA加密
-func (c *PayClient) RsaEncryptByPublicKey(plaintext string) (string, error) {
+// RsaEncryptByWxPayPubCertKey 使用微信支付平台证书公钥RSA加密
+func (c *PayClient) RsaEncryptByWxPayPubCertKey(plaintext string) (string, error) {
 	if len(c.PlatformCertMap) < 1 || c.DefaultPlatformSerialNo == "" {
 		return "", fmt.Errorf("请先初始化平台证书")
 	}
@@ -312,6 +314,22 @@ func (c *PayClient) RsaEncryptByPublicKey(plaintext string) (string, error) {
 		return "", err
 	}
 
+	ciphertext := base64.StdEncoding.EncodeToString(cipherData)
+	return ciphertext, nil
+}
+
+// RsaEncryptByWxPayPubKey 使用微信支付平台公钥RSA加密
+func (c *PayClient) RsaEncryptByWxPayPubKey(plaintext string) (string, error) {
+	if c.WechatPayPublicKeyID == "" || c.WechatPayPublicKey == nil {
+		return "", fmt.Errorf("请先初始化微信支付平台公钥")
+	}
+	secretMessage := []byte(plaintext)
+	rng := rand.Reader
+
+	cipherData, err := rsa.EncryptOAEP(sha1.New(), rng, c.WechatPayPublicKey, secretMessage, nil)
+	if err != nil {
+		return "", err
+	}
 	ciphertext := base64.StdEncoding.EncodeToString(cipherData)
 	return ciphertext, nil
 }

@@ -13,7 +13,7 @@ import (
 	"net/url"
 )
 
-//QueryOrganizationInfoById is QueryOrganizationInfoById
+// QueryOrganizationInfoById is QueryOrganizationInfoById
 func (c *PayClient) QueryOrganizationInfoById(organizationId string) (*custom.RespOrganizationInfo, error) {
 	params := map[string]string{"organization_id": organizationId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryOrganizationInfoById), http.MethodGet)
@@ -29,7 +29,7 @@ func (c *PayClient) QueryOrganizationInfoById(organizationId string) (*custom.Re
 	return &resp, nil
 }
 
-//QueryOrganizationInfoByName is QueryOrganizationInfoByName
+// QueryOrganizationInfoByName is QueryOrganizationInfoByName
 func (c *PayClient) QueryOrganizationInfoByName(organizationName string) (*custom.RespOrganizationInfo, error) {
 	params := map[string]string{"organization_name": url.QueryEscape(organizationName)}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryOrganizationInfoByName), http.MethodGet)
@@ -45,7 +45,7 @@ func (c *PayClient) QueryOrganizationInfoByName(organizationName string) (*custo
 	return &resp, nil
 }
 
-//ObtainAuthToken ObtainAuthToken
+// ObtainAuthToken ObtainAuthToken
 func (c *PayClient) ObtainAuthToken(data custom.ReqObtainAuthToken) (*custom.RespObtainAuthToken, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIObtainAuthToken), http.MethodPost)
 	if err != nil {
@@ -75,7 +75,7 @@ func (c *PayClient) PayCredential(data custom.ReqPayCredential) (*custom.RespPay
 	return &resp, nil
 }
 
-//QueryFaceUserInfo QueryFaceUserInfo
+// QueryFaceUserInfo QueryFaceUserInfo
 func (c *PayClient) QueryFaceUserInfo(organizationId, outUserId string, isDecrypt ...bool) (*custom.RespQueryFaceUserInfo, error) {
 	params := map[string]string{"organization_id": organizationId, "out_user_id": outUserId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryFaceUserInfo), http.MethodGet)
@@ -98,7 +98,7 @@ func (c *PayClient) QueryFaceUserInfo(organizationId, outUserId string, isDecryp
 	return &resp, nil
 }
 
-//UpdateFaceUserInfo UpdateFaceUserInfo
+// UpdateFaceUserInfo 更新人脸用户信息
 func (c *PayClient) UpdateFaceUserInfo(data custom.ReqUpdateUserInfo) error {
 	params := map[string]string{"organization_id": data.OrganizationId, "out_user_id": data.OutUserId}
 	reqData := custom.ReqUpdateRequestData{
@@ -112,14 +112,29 @@ func (c *PayClient) UpdateFaceUserInfo(data custom.ReqUpdateUserInfo) error {
 		reqData.StaffInfo = data.RequestData.StaffInfo
 	}
 	var err error
-	reqData.UserName, err = c.RsaEncryptByPublicKey(data.RequestData.UserName)
-	if err != nil {
-		return err
+
+	if c.WechatPayPublicKeyID != "" && c.WechatPayPublicKey != nil { //优先使用微信平台公钥加密敏感数据
+		reqData.UserName, err = c.RsaEncryptByWxPayPubKey(data.RequestData.UserName)
+		if err != nil {
+			return err
+		}
+		reqData.Phone, err = c.RsaEncryptByWxPayPubKey(data.RequestData.Phone)
+		if err != nil {
+			return err
+		}
+	} else if c.DefaultPlatformSerialNo != "" && len(c.PlatformCertMap) > 0 { //使用微信平台证书加密敏感数据
+		reqData.UserName, err = c.RsaEncryptByWxPayPubCertKey(data.RequestData.UserName)
+		if err != nil {
+			return err
+		}
+		reqData.Phone, err = c.RsaEncryptByWxPayPubCertKey(data.RequestData.Phone)
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("添加分账接收方需要做敏感数据加密,当前实例的微信平台公钥或证书不允许为空")
 	}
-	reqData.Phone, err = c.RsaEncryptByPublicKey(data.RequestData.Phone)
-	if err != nil {
-		return err
-	}
+
 	_, err = c.doRequest(reqData, utils.BuildUrl(params, nil, constant.APIUpdateFaceUserInfo), http.MethodPatch)
 	if err != nil {
 		return err
@@ -127,7 +142,7 @@ func (c *PayClient) UpdateFaceUserInfo(data custom.ReqUpdateUserInfo) error {
 	return nil
 }
 
-//DissolveFaceUserContract DissolveFaceUserContract
+// DissolveFaceUserContract 解约
 func (c *PayClient) DissolveFaceUserContract(organizationId, outUserId string) error {
 	params := map[string]string{"organization_id": organizationId, "user_id": outUserId}
 	_, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIDissolveFaceUserContract), http.MethodPost)
@@ -137,7 +152,7 @@ func (c *PayClient) DissolveFaceUserContract(organizationId, outUserId string) e
 	return nil
 }
 
-//PreSignature PreSignature
+// PreSignature PreSignature
 func (c *PayClient) PreSignature(data custom.ReqPresignToken) (*custom.RespPresignToken, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIPreSignature), http.MethodPost)
 	if err != nil {
@@ -151,7 +166,7 @@ func (c *PayClient) PreSignature(data custom.ReqPresignToken) (*custom.RespPresi
 	return &resp, nil
 }
 
-//OfflineFaceTransactions OfflineFaceTransactions
+// OfflineFaceTransactions OfflineFaceTransactions
 func (c *PayClient) OfflineFaceTransactions(data custom.ReqOfflinefaceTransactions) (*custom.RespOfflinefaceTransactions, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIOfflinefaceTransactions), http.MethodPost)
 	if err != nil {
@@ -165,7 +180,7 @@ func (c *PayClient) OfflineFaceTransactions(data custom.ReqOfflinefaceTransactio
 	return &resp, nil
 }
 
-//ContractQuery ContractQuery
+// ContractQuery ContractQuery
 func (c *PayClient) ContractQuery(contractId, AppId string) (*custom.RespContractQuery, error) {
 	params := map[string]string{"contract_id": contractId, "appid": AppId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIContractQuery), http.MethodGet)
@@ -180,7 +195,7 @@ func (c *PayClient) ContractQuery(contractId, AppId string) (*custom.RespContrac
 	return &resp, nil
 }
 
-//FaceMessageDecryption FaceMessageDecryption
+// FaceMessageDecryption FaceMessageDecryption
 func (c *PayClient) FaceMessageDecryption(data custom.FaceMessageCiphertext) (*custom.FaceMessagePlaintext, error) {
 	// 对编码密文进行base64解码
 	decodeBytes, err := base64.StdEncoding.DecodeString(data.Resource.Ciphertext)
@@ -222,7 +237,7 @@ func (c *PayClient) FaceMessageDecryption(data custom.FaceMessageCiphertext) (*c
 	return &res, nil
 }
 
-//QueryRepurchaseUsersList QueryRepurchaseUsersList
+// QueryRepurchaseUsersList QueryRepurchaseUsersList
 func (c *PayClient) QueryRepurchaseUsersList(organizationId, offset, limit string) (*custom.RespQueryRepurchaseUsersList, error) {
 	params := map[string]string{"organization_id": organizationId, "offset": offset, "limit": limit}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryRepurchaseUsersList), http.MethodGet)
@@ -237,7 +252,7 @@ func (c *PayClient) QueryRepurchaseUsersList(organizationId, offset, limit strin
 	return &resp, nil
 }
 
-//QueryRetake QueryRetake
+// QueryRetake QueryRetake
 func (c *PayClient) QueryRetake(collectionId string) (*custom.FaceCollections, error) {
 	params := map[string]string{"collection_id": collectionId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryRetake), http.MethodGet)
@@ -252,7 +267,7 @@ func (c *PayClient) QueryRetake(collectionId string) (*custom.FaceCollections, e
 	return &resp, nil
 }
 
-//QueryOfflineFaceOrders QueryOfflineFaceOrders
+// QueryOfflineFaceOrders QueryOfflineFaceOrders
 func (c *PayClient) QueryOfflineFaceOrders(outTradeNo, spMchid, subMchid, businessProductId string) (*custom.RespOfflinefaceTransactions, error) {
 	params := map[string]string{"out_trade_no": outTradeNo, "sp_mchid": spMchid, "sub_mchid": subMchid, "business_product_id": businessProductId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryOfflineFaceOrders), http.MethodGet)
@@ -267,7 +282,7 @@ func (c *PayClient) QueryOfflineFaceOrders(outTradeNo, spMchid, subMchid, busine
 	return &resp, nil
 }
 
-//GetAuthInfo GetAuthInfo
+// GetAuthInfo GetAuthInfo
 func (c *PayClient) GetAuthInfo(data custom.ReqGetAuthInfo) (*custom.RespGetAuthInfo, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIGetAuthInfo), http.MethodPost)
 	if err != nil {
@@ -281,7 +296,7 @@ func (c *PayClient) GetAuthInfo(data custom.ReqGetAuthInfo) (*custom.RespGetAuth
 	return &resp, nil
 }
 
-//GetRepaymentUrl GetRepaymentUrl
+// GetRepaymentUrl GetRepaymentUrl
 func (c *PayClient) GetRepaymentUrl(data custom.ReqGetRepaymentUrl) (*custom.RespGetRepaymentUrl, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIGetRepaymentUrl), http.MethodPost)
 	if err != nil {

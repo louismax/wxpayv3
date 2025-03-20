@@ -21,7 +21,7 @@ import (
 	"strings"
 )
 
-//UploadImage UploadImage
+// UploadImage UploadImage
 func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error) {
 	//获取文件名带后缀
 	filenameWithSuffix := path.Base(filePath)
@@ -113,8 +113,10 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 	request.Header.Set("Accept", "*/*")
 	request.Header.Set("Authorization", authorization)
 
-	if c.PlatformSerialNo != "" {
-		request.Header.Set("Wechatpay-Serial", c.PlatformSerialNo)
+	if c.WechatPayPublicKeyID != "" {
+		request.Header.Set("Wechatpay-Serial", c.WechatPayPublicKeyID)
+	} else if c.DefaultPlatformSerialNo != "" {
+		request.Header.Set("Wechatpay-Serial", c.DefaultPlatformSerialNo)
 	}
 
 	resp, err := c.HttpClient.Do(request)
@@ -141,7 +143,7 @@ func (c *PayClient) UploadImage(filePath string) (*custom.RespUploadImage, error
 
 }
 
-//CreateForm CreateForm
+// CreateForm CreateForm
 func CreateForm(key, contentType string, w *multipart.Writer) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition",
@@ -157,7 +159,7 @@ func escapeQuotes(s string) string {
 	return quoteEscape.Replace(s)
 }
 
-//CreateFormFile CreateFormFile
+// CreateFormFile CreateFormFile
 func CreateFormFile(fieldName, filename, contentType string, w *multipart.Writer) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition",

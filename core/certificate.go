@@ -15,31 +15,33 @@ import (
 	"time"
 )
 
-// ApiCert ApiCert
+// ApiCert 商户证书参数
 type ApiCert struct {
-	ApiSerialNo    string
-	ApiPrivateKey  *rsa.PrivateKey   // API证书私钥
-	ApiCertificate *x509.Certificate // API证书
+	ApiSerialNo    string            // 商户API证书序列号
+	ApiPrivateKey  *rsa.PrivateKey   // 商户API私钥
+	ApiCertificate *x509.Certificate // 商户API证书
 }
 
-// PlatformCert PlatformCert
-type PlatformCert struct {
-	PlatformSerialNo    string
-	PlatformCertificate *x509.Certificate
-}
-
-//Certificate Certificate
-func (c *PayClient) Certificate() (*custom.CertificateResp, error) {
+// GetCertificate 获取微信平台证书(仅从微信获取最新的平台证书)
+func (c *PayClient) GetCertificate() ([]custom.CertificateData, error) {
 	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.ApiCertification), http.MethodGet)
 	if err != nil {
 		return nil, err
 	}
-	var resp custom.CertificateResp
-	err = json.Unmarshal(body, &resp)
+	resp := &custom.CertificateResp{}
+	err = json.Unmarshal(body, resp)
 	if err != nil {
 		return nil, err
 	}
+	result := make([]custom.CertificateData, 0)
+
 	for _, data := range resp.Data {
+		item := custom.CertificateData{
+			EncryptCertificate: data.EncryptCertificate,
+			SerialNo:           data.SerialNo,
+			EffectiveTime:      data.EffectiveTime,
+			ExpireTime:         data.ExpireTime,
+		}
 		encryptCert := data.EncryptCertificate
 		if encryptCert == nil {
 			continue
@@ -48,19 +50,74 @@ func (c *PayClient) Certificate() (*custom.CertificateResp, error) {
 		if err != nil {
 			return nil, err
 		}
-		data.DecryptCertificate = string(decryptCert)
+		item.DecryptCertificate = string(decryptCert)
+
+		result = append(result, item)
 	}
-	return &resp, nil
+	return result, nil
 }
 
-//SetClientPlatformCert SetClientPlatformCert
-func (c *PayClient) SetClientPlatformCert(certificateStr string) error {
-	ct, err := LoadCertificate(certificateStr)
+// GetAndSetCertificate 获取并设置微信平台证书（一步到位,从微信获取最新的平台证书，并设置到当前客户端）
+func (c *PayClient) GetAndSetCertificate() ([]custom.CertificateData, error) {
+	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.ApiCertification), http.MethodGet)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	c.PlatformSerialNo = GetCertificateSerialNumber(*ct)
-	c.PlatformCertificate = ct
+	resp := &custom.CertificateResp{}
+	err = json.Unmarshal(body, resp)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]custom.CertificateData, 0)
+	if c.PlatformCertMap == nil {
+		c.PlatformCertMap = make(map[string]*x509.Certificate)
+	}
+
+	for _, data := range resp.Data {
+		item := custom.CertificateData{
+			EncryptCertificate: data.EncryptCertificate,
+			SerialNo:           data.SerialNo,
+			EffectiveTime:      data.EffectiveTime,
+			ExpireTime:         data.ExpireTime,
+		}
+		encryptCert := data.EncryptCertificate
+		if encryptCert == nil {
+			continue
+		}
+		decryptCert, err := c.Decrypt(encryptCert.Algorithm, encryptCert.Ciphertext, encryptCert.AssociatedData, encryptCert.Nonce)
+		if err != nil {
+			return nil, err
+		}
+		item.DecryptCertificate = string(decryptCert)
+		ct, err := LoadCertificate(item.DecryptCertificate)
+		if err != nil {
+			return nil, err
+		}
+		if c.DefaultPlatformSerialNo == "" {
+			c.DefaultPlatformSerialNo = GetCertificateSerialNumber(*ct)
+		}
+		c.PlatformCertMap[GetCertificateSerialNumber(*ct)] = ct
+
+		result = append(result, item)
+	}
+	return result, nil
+}
+
+// SetClientPlatformCert 设置客户端微信平台证书(通过证书字符串设置当前客户端的平台证书)
+func (c *PayClient) SetClientPlatformCert(certificateStr []string) error {
+	if c.PlatformCertMap == nil {
+		c.PlatformCertMap = make(map[string]*x509.Certificate)
+	}
+	for _, v := range certificateStr {
+		ct, err := LoadCertificate(v)
+		if err != nil {
+			return err
+		}
+		if c.DefaultPlatformSerialNo == "" {
+			c.DefaultPlatformSerialNo = GetCertificateSerialNumber(*ct)
+		}
+		c.PlatformCertMap[GetCertificateSerialNumber(*ct)] = ct
+	}
 	return nil
 }
 
@@ -120,7 +177,7 @@ func LoadCertificateWithPath(path string) (certificate *x509.Certificate, err er
 	return LoadCertificate(string(certificateBytes))
 }
 
-// LoadPrivateKeyWithPath 通过私钥的文件路径内容加载私钥
+// LoadPrivateKeyWithPath 通过私钥的文件路径加载私钥
 func LoadPrivateKeyWithPath(path string) (privateKey *rsa.PrivateKey, err error) {
 	privateKeyBytes, err := ioutil.ReadFile(path)
 	if err != nil {

@@ -174,7 +174,7 @@ func (c *PayClient) ApplyFundBill(billDate, accountType, tarType string) (*custo
 
 // DownloadBill 下载账单
 func (c *PayClient) DownloadBill(downloadUrl string) ([]byte, error) {
-	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, downloadUrl), http.MethodGet, true)
+	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, downloadUrl), http.MethodGet)
 	if err != nil {
 		return nil, err
 	}

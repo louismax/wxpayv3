@@ -22,16 +22,21 @@ import (
 type Client interface {
 	// Authorization 获取签名Authorization，由认证类型和签名信息组成
 	Authorization(httpMethod string, urlString string, body []byte) (string, error)
-	// Certificate 获取平台证书
-	Certificate() (*custom.CertificateResp, error)
-	// SetClientPlatformCert 设置平台证书
-	SetClientPlatformCert(certificateStr string) error
+
+	// GetCertificate 获取微信支付平台证书
+	GetCertificate() ([]custom.CertificateData, error)
+	// GetAndSetCertificate 获取并设置微信支付平台证书
+	GetAndSetCertificate() ([]custom.CertificateData, error)
+	// SetClientPlatformCert 设置微信支付平台证书
+	SetClientPlatformCert(certificateStr []string) error
 	// RsaEncryptByPrivateKey 使用商户私钥加密敏感数据
 	RsaEncryptByPrivateKey(origData []byte) (string, error)
 	// RsaDecryptByPrivateKey 使用商户私钥解密敏感数据
 	RsaDecryptByPrivateKey(ciphertext string) (string, error)
-	// RsaEncryptByPublicKey 使用平台公钥加密敏感数据
-	RsaEncryptByPublicKey(plaintext string) (string, error)
+	// RsaEncryptByWxPayPubCertKey 使用微信支付平台证书公钥RSA加密
+	RsaEncryptByWxPayPubCertKey(plaintext string) (string, error)
+	// RsaEncryptByWxPayPubKey 使用微信支付平台公钥RSA加密
+	RsaEncryptByWxPayPubKey(plaintext string) (string, error)
 	// Decrypt 通知密文数据使用V3Key解密 （AES_256_GCM）
 	Decrypt(algorithm string, cipherText string, associatedData string, nonce string) ([]byte, error)
 
@@ -65,7 +70,7 @@ type Client interface {
 	QueryRemainingFrozenAmount(transactionId string) (*custom.RespQueryRemainingFrozenAmount, error)
 	//QueryMaximumSplitRatio 查询子商户最大分账比例
 	QueryMaximumSplitRatio(subMchid string) (*custom.RespQueryMaximumSplitRatio, error)
-	//AddProfitSharingReceiver 添加分账接收方
+	//AddProfitSharingReceiver 添加分账接收方(注意,默认会做敏感数据加密,如果不需要加密,请传入noEny参数) 兼容服务商、直连商户
 	AddProfitSharingReceiver(data custom.ReqAddProfitSharingReceiver) (*custom.RespAddProfitSharingReceiver, error)
 	//DeleteProfitSharingReceiver 删除分账接收方
 	DeleteProfitSharingReceiver(data custom.ReqDeleteProfitSharingReceiver) (*custom.RespDeleteProfitSharingReceiver, error)
@@ -173,22 +178,26 @@ type Client interface {
 	UpdateViolationNotifications(data custom.GeneralViolationNotifications) (*custom.GeneralViolationNotifications, error)
 	//DeleteViolationNotifications 删除商户违规通知回调地址
 	DeleteViolationNotifications() error
+
+	// QueryComplaintsList 查询投诉单列表(兼容服务商模式、直连商户模式)
+	QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error)
 }
 
 // PayClient PayClient
 type PayClient struct {
-	MchId               string            // 商户号
-	ApiV3Key            string            // apiV3密钥
-	ApiSerialNo         string            // API证书序列号
-	ApiPrivateKey       *rsa.PrivateKey   // API私钥
-	ApiCertificate      *x509.Certificate // API证书
-	PlatformSerialNo    string            // 平台证书序列号
-	PlatformCertificate *x509.Certificate // 平台证书
-	HttpClient          *http.Client
+	MchId                   string                       // 商户号
+	ApiV3Key                string                       // ApiV3Key密钥,用于解密回调通知的密文数据，平台证书密文
+	ApiSerialNo             string                       // API证书序列号
+	ApiPrivateKey           *rsa.PrivateKey              // API证书私钥
+	ApiCertificate          *x509.Certificate            // API证书(非必须，可获取证书序列号和商户API公钥)
+	DefaultPlatformSerialNo string                       // 默认平台证书序列号
+	PlatformCertMap         map[string]*x509.Certificate // 平台证书集合
+	WechatPayPublicKeyID    string                       // 平台公钥ID
+	WechatPayPublicKey      *rsa.PublicKey               // 平台公钥
+	HttpClient              *http.Client                 // http客户端
 }
 
-func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string, isCheck ...bool) ([]byte, error) {
-	fmt.Println(url)
+func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string) ([]byte, error) {
 	var data []byte
 	if requestData != nil {
 		var err error
@@ -198,6 +207,15 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 		}
 	}
 	authorization, err := c.Authorization(httpMethod, url, data)
+
+	//告诉微信需要什么验签方式,2025年开始,优先使用微信平台公钥，不存在时使用微信平台证书，还不存在不传(部分做了敏感数据加密的接口必传)
+	serial := ""
+	if c.WechatPayPublicKeyID != "" {
+		serial = c.WechatPayPublicKeyID
+	} else if c.DefaultPlatformSerialNo != "" {
+		serial = c.DefaultPlatformSerialNo
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -205,7 +223,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	retryTimes := 3
 	var resp *http.Response
 	for i := 0; i < retryTimes; i++ {
-		resp, err = SimpleRequest(c.HttpClient, url, httpMethod, authorization, data, c.PlatformSerialNo)
+		resp, err = SimpleRequest(c.HttpClient, url, httpMethod, authorization, data, serial)
 		if err != nil {
 			continue
 		}
@@ -221,20 +239,13 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	if err != nil {
 		return nil, err
 	}
-	if len(isCheck) > 0 {
-		if !isCheck[0] {
-			err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
-		if err != nil {
-			return nil, err
-		}
-	}
 
+	fmt.Printf("\n\033[36m%s\n", "--WxPayV3-Request-Id:"+c.getRequestId(&resp.Header))
+
+	err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
+	if err != nil {
+		return nil, err
+	}
 	return body, nil
 }
 
@@ -290,19 +301,35 @@ func (c *PayClient) RsaDecryptByPrivateKey(ciphertext string) (string, error) {
 	return string(plaintext), nil
 }
 
-// RsaEncryptByPublicKey 使用平台公钥RSA加密
-func (c *PayClient) RsaEncryptByPublicKey(plaintext string) (string, error) {
-	if c.PlatformSerialNo == "" || c.PlatformCertificate == nil {
+// RsaEncryptByWxPayPubCertKey 使用微信支付平台证书公钥RSA加密
+func (c *PayClient) RsaEncryptByWxPayPubCertKey(plaintext string) (string, error) {
+	if len(c.PlatformCertMap) < 1 || c.DefaultPlatformSerialNo == "" {
 		return "", fmt.Errorf("请先初始化平台证书")
 	}
 	secretMessage := []byte(plaintext)
 	rng := rand.Reader
 
-	cipherData, err := rsa.EncryptOAEP(sha1.New(), rng, c.PlatformCertificate.PublicKey.(*rsa.PublicKey), secretMessage, nil)
+	cipherData, err := rsa.EncryptOAEP(sha1.New(), rng, c.PlatformCertMap[c.DefaultPlatformSerialNo].PublicKey.(*rsa.PublicKey), secretMessage, nil)
 	if err != nil {
 		return "", err
 	}
 
+	ciphertext := base64.StdEncoding.EncodeToString(cipherData)
+	return ciphertext, nil
+}
+
+// RsaEncryptByWxPayPubKey 使用微信支付平台公钥RSA加密
+func (c *PayClient) RsaEncryptByWxPayPubKey(plaintext string) (string, error) {
+	if c.WechatPayPublicKeyID == "" || c.WechatPayPublicKey == nil {
+		return "", fmt.Errorf("请先初始化微信支付平台公钥")
+	}
+	secretMessage := []byte(plaintext)
+	rng := rand.Reader
+
+	cipherData, err := rsa.EncryptOAEP(sha1.New(), rng, c.WechatPayPublicKey, secretMessage, nil)
+	if err != nil {
+		return "", err
+	}
 	ciphertext := base64.StdEncoding.EncodeToString(cipherData)
 	return ciphertext, nil
 }

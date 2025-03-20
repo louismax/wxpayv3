@@ -56,7 +56,7 @@ type Client interface {
 	// GetStatusRepairOrderByApplymentId 通过申请单号查询申请状态
 	GetStatusRepairOrderByApplymentId(applymentId string) (*custom.RespGetStatusRepairOrder, error)
 
-	//InitiateProfitSharing 发起分账请求
+	//InitiateProfitSharing 发起分账请求(注意,默认会做敏感数据加密) 兼容服务商、直连商户
 	InitiateProfitSharing(data custom.ReqInitiateProfitSharing) (*custom.RespInitiateProfitSharing, error)
 	//QueryProfitSharingResult 查询分账结果
 	QueryProfitSharingResult(subMchid, transactionId, outOrderNo string) (*custom.RespQueryProfitSharingResult, error)
@@ -70,7 +70,7 @@ type Client interface {
 	QueryRemainingFrozenAmount(transactionId string) (*custom.RespQueryRemainingFrozenAmount, error)
 	//QueryMaximumSplitRatio 查询子商户最大分账比例
 	QueryMaximumSplitRatio(subMchid string) (*custom.RespQueryMaximumSplitRatio, error)
-	//AddProfitSharingReceiver 添加分账接收方(注意,默认会做敏感数据加密,如果不需要加密,请传入noEny参数) 兼容服务商、直连商户
+	//AddProfitSharingReceiver 添加分账接收方(注意,默认会做敏感数据加密) 兼容服务商、直连商户
 	AddProfitSharingReceiver(data custom.ReqAddProfitSharingReceiver) (*custom.RespAddProfitSharingReceiver, error)
 	//DeleteProfitSharingReceiver 删除分账接收方
 	DeleteProfitSharingReceiver(data custom.ReqDeleteProfitSharingReceiver) (*custom.RespDeleteProfitSharingReceiver, error)

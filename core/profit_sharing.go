@@ -10,8 +10,27 @@ import (
 	"net/url"
 )
 
-// InitiateProfitSharing is InitiateProfitSharing
+// InitiateProfitSharing 请求分账(注意,默认会做敏感数据加密)
 func (c *PayClient) InitiateProfitSharing(data custom.ReqInitiateProfitSharing) (*custom.RespInitiateProfitSharing, error) {
+	var err error
+	for i, v := range data.Receivers {
+		if v.Name != "" {
+			if c.WechatPayPublicKeyID != "" && c.WechatPayPublicKey != nil { //优先使用微信平台公钥加密敏感数据
+				data.Receivers[i].Name, err = c.RsaEncryptByWxPayPubKey(v.Name)
+				if err != nil {
+					return nil, err
+				}
+			} else if c.DefaultPlatformSerialNo != "" && len(c.PlatformCertMap) > 0 { //使用微信平台证书加密敏感数据
+				data.Receivers[i].Name, err = c.RsaEncryptByWxPayPubCertKey(v.Name)
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				return nil, fmt.Errorf("发起分账需要做敏感数据加密,当前实例的微信平台公钥或证书不允许为空")
+			}
+		}
+	}
+
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIInitiateProfitSharing), http.MethodPost)
 	if err != nil {
 		return nil, err
@@ -24,7 +43,7 @@ func (c *PayClient) InitiateProfitSharing(data custom.ReqInitiateProfitSharing) 
 	return &resp, nil
 }
 
-// QueryProfitSharingResult IS QueryProfitSharingResult
+// QueryProfitSharingResult 查询分账结果
 func (c *PayClient) QueryProfitSharingResult(subMchid, transactionId, outOrderNo string) (*custom.RespQueryProfitSharingResult, error) {
 	params := map[string]string{"out_order_no": outOrderNo, "sub_mchid": subMchid, "transaction_id": transactionId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryProfitSharingResult), http.MethodGet)
@@ -68,7 +87,7 @@ func (c *PayClient) QueryProfitSharingReturnOrders(subMchid, outReturnNo, outOrd
 	return &resp, nil
 }
 
-// UnfreezeRemainingFunds  is UnfreezeRemainingFunds
+// UnfreezeRemainingFunds  解冻剩余资金
 func (c *PayClient) UnfreezeRemainingFunds(data custom.ReqUnfreezeRemainingFunds) (*custom.RespUnfreezeRemainingFunds, error) {
 	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIUnfreezeRemainingFunds), http.MethodPost)
 	if err != nil {
@@ -82,7 +101,7 @@ func (c *PayClient) UnfreezeRemainingFunds(data custom.ReqUnfreezeRemainingFunds
 	return &resp, nil
 }
 
-// QueryRemainingFrozenAmount IS QueryRemainingFrozenAmount
+// QueryRemainingFrozenAmount 查询剩余冻结金额
 func (c *PayClient) QueryRemainingFrozenAmount(transactionId string) (*custom.RespQueryRemainingFrozenAmount, error) {
 	params := map[string]string{"transaction_id": transactionId}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryRemainingFrozenAmount), http.MethodGet)
@@ -97,7 +116,7 @@ func (c *PayClient) QueryRemainingFrozenAmount(transactionId string) (*custom.Re
 	return &resp, nil
 }
 
-// QueryMaximumSplitRatio IS QueryMaximumSplitRatio
+// QueryMaximumSplitRatio 查询最大分账比例
 func (c *PayClient) QueryMaximumSplitRatio(subMchid string) (*custom.RespQueryMaximumSplitRatio, error) {
 	params := map[string]string{"sub_mchid": subMchid}
 	body, err := c.doRequest(nil, utils.BuildUrl(params, nil, constant.APIQueryMaximumSplitRatio), http.MethodGet)

@@ -2,9 +2,9 @@ package custom
 
 // ReqInitiateProfitSharing 发起分账请求参数
 type ReqInitiateProfitSharing struct {
-	SubMchid        string                      `json:"sub_mchid"`
+	SubMchid        string                      `json:"sub_mchid,omitempty"` //直连商户不需要该字段
 	Appid           string                      `json:"appid"`
-	SubAppid        string                      `json:"sub_appid"`
+	SubAppid        string                      `json:"sub_appid,omitempty"` //直连商户不需要该字段
 	TransactionID   string                      `json:"transaction_id"`
 	OutOrderNo      string                      `json:"out_order_no"`
 	Receivers       []ReqProfitSharingReceivers `json:"receivers"` //分账接收方列表

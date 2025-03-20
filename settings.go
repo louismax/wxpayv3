@@ -10,7 +10,7 @@ import (
 func InjectWxPayMchParam(mchID, apiV3Key, apiSerialNo, pvtKeyFilePath string) core.ClientOption {
 	pvt, err := core.LoadPrivateKeyWithPath(pvtKeyFilePath)
 	if err != nil {
-		fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过私钥的文件路径加载商户私钥失败！"+err.Error())
+		fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过私钥的文件路径加载商户私钥失败！"+err.Error())
 		return core.ErrorOption{Error: err}
 	}
 	return core.BasicInformation{
@@ -36,12 +36,12 @@ func InjectWxPayMchParamFull(mchID string, apiCert core.ApiCert, apiV3Key string
 func InjectWxPayMchParamExtra(mchID string, apiV3Key string, privateKeyPath string, certificatePath string) core.ClientOption {
 	pvt, err := core.LoadPrivateKeyWithPath(privateKeyPath)
 	if err != nil {
-		fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过私钥的文件路径加载商户私钥失败！"+err.Error())
+		fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过私钥的文件路径加载商户私钥失败！"+err.Error())
 		return core.ErrorOption{Error: err}
 	}
 	cert, err := core.LoadCertificateWithPath(certificatePath)
 	if err != nil {
-		fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过证书的文件路径加载商户商户失败！"+err.Error())
+		fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过证书的文件路径加载商户商户失败！"+err.Error())
 		return core.ErrorOption{Error: err}
 	}
 	return core.BasicInformation{
@@ -62,7 +62,7 @@ func InjectWxPayPlatformCert(certificateStr []string) core.ClientOption {
 	for _, v := range certificateStr {
 		ct, err := core.LoadCertificate(v)
 		if err != nil {
-			fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过平台证书的文本内容加载微信支付平台证书失败！"+err.Error())
+			fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过平台证书的文本内容加载微信支付平台证书失败！"+err.Error())
 			return core.ErrorOption{Error: err}
 		}
 		if defNo == "" {
@@ -87,7 +87,7 @@ func InjectWxPayPlatformCertUseCertPath(platformCertificatePath []string) core.C
 	for _, v := range platformCertificatePath {
 		ct, err := core.LoadCertificateWithPath(v)
 		if err != nil {
-			fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过证书的文件路径加载微信支付平台证书失败！"+err.Error())
+			fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过证书的文件路径加载微信支付平台证书失败！"+err.Error())
 			return core.ErrorOption{Error: err}
 		}
 		if defNo == "" {
@@ -108,7 +108,7 @@ func InjectWxPayPlatformCertUseCertPath(platformCertificatePath []string) core.C
 func InjectWxPayPlatformPubKey(pubKeyId, pubKey string) core.ClientOption {
 	pub, err := core.LoadPublicKey(pubKey)
 	if err != nil {
-		fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过公钥文本内容加载微信支付平台公钥失败！"+err.Error())
+		fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过公钥文本内容加载微信支付平台公钥失败！"+err.Error())
 		return core.ErrorOption{Error: err}
 	}
 	return core.PlatformPubKey{
@@ -120,7 +120,7 @@ func InjectWxPayPlatformPubKey(pubKeyId, pubKey string) core.ClientOption {
 func InjectWxPayPlatformPubKeyUsePath(pubKeyId, pubKeyPath string) core.ClientOption {
 	pub, err := core.LoadPublicKeyWithPath(pubKeyPath)
 	if err != nil {
-		fmt.Printf("\033[31m%s\n", "[Error]--WxPayV3:通过公钥文件路径加载微信支付平台公钥失败！"+err.Error())
+		fmt.Printf("\033[31m%s\033[0m\n", "[Error]--WxPayV3:通过公钥文件路径加载微信支付平台公钥失败！"+err.Error())
 		return core.ErrorOption{Error: err}
 	}
 	return core.PlatformPubKey{

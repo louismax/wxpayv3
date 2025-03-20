@@ -240,7 +240,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 		return nil, err
 	}
 
-	fmt.Printf("\n\033[36m%s\n", "--WxPayV3-Request-Id:"+c.getRequestId(&resp.Header))
+	fmt.Printf("\n\033[36m%s\033[0m\n", "--WxPayV3-Request-Id:"+c.getRequestId(&resp.Header))
 
 	err = c.VerifyResponse(resp.StatusCode, &resp.Header, body)
 	if err != nil {

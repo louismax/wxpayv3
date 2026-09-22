@@ -110,3 +110,9 @@ const APIViolationNotifications = "/v3/merchant-risk-manage/violation-notificati
 const (
 	APIComplaintsList = "/v3/merchant-service/complaints-v2" //申请交易账单
 )
+
+const (
+	APIPalmServicePreBind    = "/v3/palmservice/assistbindpalm/services/{service_id}/tickets/{merchant_ticket_id}/prebind" //刷掌预绑定
+	APIPalmServiceQueryBind  = "/v3/palmservice/assistbindpalm/services/{service_id}/tickets/{merchant_ticket_id}"         //刷掌查询绑定
+	APIPalmServiceDeleteBind = "/v3/palmservice/assistbindpalm/services/{service_id}/tickets/{merchant_ticket_id}"         //刷掌删除绑定
+)

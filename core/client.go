@@ -11,11 +11,12 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/louismax/wxpayv3/constant"
-	"github.com/louismax/wxpayv3/custom"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/louismax/wxpayv3/constant"
+	"github.com/louismax/wxpayv3/custom"
 )
 
 // Client is Client
@@ -181,6 +182,13 @@ type Client interface {
 
 	// QueryComplaintsList 查询投诉单列表(兼容服务商模式、直连商户模式)
 	QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error)
+
+	// PalmServicePreBind 刷掌票据预绑定
+	PalmServicePreBind(serviceId, ticketId string, data map[string]interface{}) (*custom.RespPalmServicePreBind, error)
+	// PalmServiceQueryBind 查询刷掌绑定
+	PalmServiceQueryBind(serviceId, ticketId string) (*custom.RespPalmServiceQueryBind, error)
+	// PalmServiceDeleteBind 删除刷掌绑定
+	PalmServiceDeleteBind(serviceId, ticketId string) error
 }
 
 // PayClient PayClient
@@ -235,7 +243,7 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	defer func() {
 		_ = resp.Body.Close()
 	}()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

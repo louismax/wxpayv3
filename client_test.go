@@ -1,8 +1,9 @@
 package wxpayv3
 
 import (
-	"github.com/louismax/wxpayv3/core"
 	"testing"
+
+	"github.com/louismax/wxpayv3/core"
 )
 
 func TestNewClient1(t *testing.T) {

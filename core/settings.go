@@ -23,6 +23,19 @@ type DialSettings struct {
 	HttpClient           *http.Client                 // http客户端
 }
 
+// HTTPClient HTTP客户端
+type HTTPClient struct {
+	Client *http.Client
+}
+
+// Join 注入HTTP客户端
+func (w HTTPClient) Join(o *DialSettings) error {
+	if w.Client != nil {
+		o.HttpClient = w.Client
+	}
+	return nil
+}
+
 // Validate 校验请求配置是否有效
 func (ds *DialSettings) Validate() error {
 	if ds.MchId == "" {

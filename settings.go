@@ -4,7 +4,13 @@ import (
 	"fmt"
 	"github.com/louismax/wxpayv3/core"
 	"github.com/louismax/wxpayv3/custom"
+	"net/http"
 )
+
+// InjectHTTPClient 注入HTTP客户端
+func InjectHTTPClient(client *http.Client) core.ClientOption {
+	return core.HTTPClient{Client: client}
+}
 
 // InjectWxPayMchParam 注入微信支付商户参数(商户号, 商户APIv3密钥, 商户API证书序列号, 商户私钥文件路径)
 func InjectWxPayMchParam(mchID, apiV3Key, apiSerialNo, pvtKeyFilePath string) core.ClientOption {

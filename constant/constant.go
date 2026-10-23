@@ -43,6 +43,8 @@ const (
 	APIApplyProfitSharingBill                  = "/v3/profitsharing/bills"                                        //申请分账账单
 	APIJSAPIOrdersForPartner                   = "/v3/pay/partner/transactions/jsapi"                             //服务商JSAPI下单
 	APIJSAPIOrders                             = "/v3/pay/transactions/jsapi"                                     //直连商户JSAPI下单
+	APINativeOrdersForPartner                  = "/v3/pay/partner/transactions/native"                            //服务商Native下单
+	APINativeOrders                            = "/v3/pay/transactions/native"                                    //直连商户Native下单
 )
 
 // 教培续费通相关接口

@@ -206,3 +206,92 @@ type ReqJSAPIOrders struct {
 type RespJSAPIOrders struct {
 	PrepayId string `json:"prepay_id"`
 }
+
+// ReqNativeOrders 直连商户Native下单请求
+type ReqNativeOrders struct {
+	Appid         string  `json:"appid"`
+	Mchid         string  `json:"mchid"`
+	Description   string  `json:"description"`
+	OutTradeNo    string  `json:"out_trade_no"`
+	TimeExpire    *string `json:"time_expire,omitempty"`
+	Attach        string  `json:"attach,omitempty"`
+	NotifyUrl     string  `json:"notify_url"`
+	GoodsTag      string  `json:"goods_tag,omitempty"`
+	SupportFapiao bool    `json:"support_fapiao,omitempty"`
+	Amount        struct {
+		Total    int    `json:"total"`
+		Currency string `json:"currency,omitempty"`
+	} `json:"amount"`
+	Detail *struct {
+		CostPrice   int    `json:"cost_price,omitempty"`
+		InvoiceId   string `json:"invoice_id,omitempty"`
+		GoodsDetail *[]struct {
+			MerchantGoodsId  string `json:"merchant_goods_id"`
+			WechatPayGoodsId string `json:"wechatpay_goods_id,omitempty"`
+			GoodsName        string `json:"goods_name,omitempty"`
+			Quantity         int    `json:"quantity"`
+			UnitPrice        int    `json:"unit_price"`
+		} `json:"goods_detail,omitempty"`
+	} `json:"detail,omitempty"`
+	SceneInfo *struct {
+		PayerClientIp string `json:"payer_client_ip"`
+		DeviceId      string `json:"device_id,omitempty"`
+		StoreInfo     *struct {
+			Id       string `json:"id"`
+			Name     string `json:"name,omitempty"`
+			AreaCode string `json:"area_code,omitempty"`
+			Address  string `json:"address,omitempty"`
+		} `json:"store_info,omitempty"`
+	} `json:"scene_info,omitempty"`
+	SettleInfo *struct {
+		ProfitSharing bool `json:"profit_sharing"`
+	} `json:"settle_info,omitempty"`
+}
+
+// ReqNativeOrdersForPartner 服务商Native下单请求
+type ReqNativeOrdersForPartner struct {
+	SpAppid       string  `json:"sp_appid"`
+	SpMchid       string  `json:"sp_mchid"`
+	SubAppid      string  `json:"sub_appid,omitempty"`
+	SubMchid      string  `json:"sub_mchid"`
+	Description   string  `json:"description"`
+	OutTradeNo    string  `json:"out_trade_no"`
+	TimeExpire    *string `json:"time_expire,omitempty"`
+	Attach        string  `json:"attach,omitempty"`
+	NotifyUrl     string  `json:"notify_url"`
+	GoodsTag      string  `json:"goods_tag,omitempty"`
+	SupportFapiao bool    `json:"support_fapiao,omitempty"`
+	Amount        struct {
+		Total    int    `json:"total"`
+		Currency string `json:"currency,omitempty"`
+	} `json:"amount"`
+	Detail *struct {
+		CostPrice   int    `json:"cost_price,omitempty"`
+		InvoiceId   string `json:"invoice_id,omitempty"`
+		GoodsDetail *[]struct {
+			MerchantGoodsId  string `json:"merchant_goods_id"`
+			WechatPayGoodsId string `json:"wechatpay_goods_id,omitempty"`
+			GoodsName        string `json:"goods_name,omitempty"`
+			Quantity         int    `json:"quantity"`
+			UnitPrice        int    `json:"unit_price"`
+		} `json:"goods_detail,omitempty"`
+	} `json:"detail,omitempty"`
+	SceneInfo *struct {
+		PayerClientIp string `json:"payer_client_ip"`
+		DeviceId      string `json:"device_id,omitempty"`
+		StoreInfo     *struct {
+			Id       string `json:"id"`
+			Name     string `json:"name,omitempty"`
+			AreaCode string `json:"area_code,omitempty"`
+			Address  string `json:"address,omitempty"`
+		} `json:"store_info,omitempty"`
+	} `json:"scene_info,omitempty"`
+	SettleInfo *struct {
+		ProfitSharing bool `json:"profit_sharing"`
+	} `json:"settle_info,omitempty"`
+}
+
+// RespNativeOrders Native下单应答
+type RespNativeOrders struct {
+	CodeUrl string `json:"code_url"`
+}

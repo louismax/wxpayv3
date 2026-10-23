@@ -71,7 +71,7 @@ func (c *PayClient) PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subM
 	return &resp, nil
 }
 
-// PaymentCloseOrder 关闭订单
+// PaymentCloseOrder 关闭订单(支持JSAPI、Native，服务商模式需传入subMchId)
 func (c *PayClient) PaymentCloseOrder(outTradeNo, mchID string, subMchId ...string) error {
 	params := map[string]string{"out_trade_no": outTradeNo}
 	if len(subMchId) > 0 {
@@ -202,6 +202,34 @@ func (c *PayClient) JSAPIOrdersForPartner(data custom.ReqJSAPIOrdersForPartner) 
 		return nil, err
 	}
 	resp := custom.RespJSAPIOrders{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// NativeOrders 直连商户Native下单
+func (c *PayClient) NativeOrders(data custom.ReqNativeOrders) (*custom.RespNativeOrders, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APINativeOrders), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespNativeOrders{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// NativeOrdersForPartner 服务商Native下单
+func (c *PayClient) NativeOrdersForPartner(data custom.ReqNativeOrdersForPartner) (*custom.RespNativeOrders, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APINativeOrdersForPartner), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespNativeOrders{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err

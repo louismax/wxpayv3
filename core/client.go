@@ -82,7 +82,7 @@ type Client interface {
 	PaymentQueryOrderByTransactionId(transactionId, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
 	//PaymentQueryOrderByOutTradeNo 查询订单-通过商户订单号(兼容服务商模式、直连商户模式)
 	PaymentQueryOrderByOutTradeNo(outTradeNo, mchID string, subMchId ...string) (*custom.ReqPaymentQueryOrder, error)
-	//PaymentCloseOrder 关闭订单(兼容服务商模式、直连商户模式)
+	//PaymentCloseOrder 关闭订单(支持JSAPI、Native，兼容服务商模式、直连商户模式)
 	PaymentCloseOrder(outTradeNo, mchID string, subMchId ...string) error
 	//PaymentRefund 直连商户退款
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
@@ -96,6 +96,10 @@ type Client interface {
 	JSAPIOrders(data custom.ReqJSAPIOrders) (*custom.RespJSAPIOrders, error)
 	//JSAPIOrdersForPartner 服务商JSAPI下单
 	JSAPIOrdersForPartner(data custom.ReqJSAPIOrdersForPartner) (*custom.RespJSAPIOrders, error)
+	//NativeOrdersForPartner 服务商Native下单
+	NativeOrdersForPartner(data custom.ReqNativeOrdersForPartner) (*custom.RespNativeOrders, error)
+	//NativeOrders 直连商户Native下单
+	NativeOrders(data custom.ReqNativeOrders) (*custom.RespNativeOrders, error)
 
 	// EduPaPayPresign 教培续费通预签约
 	EduPaPayPresign(data custom.ReqEduPaPayPresign) (*custom.RespEduPaPayPresign, error)

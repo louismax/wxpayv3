@@ -48,7 +48,7 @@ func BuildMessage(httpMethod string, urlString string, body []byte, nonceStr str
 	if err != nil {
 		return nil, err
 	}
-	urlPart := parsedUrl.Path
+	urlPart := parsedUrl.EscapedPath()
 	if len(parsedUrl.RawQuery) != 0 {
 		urlPart = urlPart + "?" + parsedUrl.RawQuery
 	}

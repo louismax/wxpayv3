@@ -83,6 +83,40 @@
 
 
 
+### 消费者投诉2.0（服务商及直连商户）
+- 投诉列表查询（服务商不传商户号时查询名下全部子商户） `QueryComplaintsList`
+- 投诉详情 `QueryComplaintDetail`
+- 协商历史及留言 `QueryComplaintNegotiationHistory`
+- 文字、图片回复 `ResponseComplaint`
+- 即时服务投诉回复（返回 `log_id`） `ResponseComplaintImmediateService`
+- 反馈处理完成 `CompleteComplaint`
+- 投诉专用图片上传 `UploadComplaintImage`
+- 按渠道返回的原始图片 URL 下载 `DownloadComplaintImage`
+- 通知原始报文验签及解密 `ParseComplaintNotification`
+
+```go
+// client 以服务商商户号、证书私钥及平台公钥等现有选项初始化。
+complaints, err := client.QueryComplaintsList("2026-10-01", "2026-10-27", 50, 0)
+// 指定子商户时，最后一个参数传被诉商户号。
+complaints, err = client.QueryComplaintsList("2026-10-01", "2026-10-27", 50, 0, "子商户号")
+
+err = client.ResponseComplaint("投诉单号", custom.ReqResponseComplaint{
+    ComplaintedMchid: "子商户号",
+    ResponseContent: "已联系用户核实处理",
+})
+```
+
+使用说明：
+- 所有处理请求继续使用服务商身份签名，`complainted_mchid` 填被诉子商户号。
+- 图片先通过投诉专用上传接口取得 `media_id` 再用于回复；普通商户资料上传接口不能替代。
+- `DownloadComplaintImage` 使用详情或协商历史返回的微信支付图片 URL，保留原始转义字符；返回图片二进制内容。
+- `ParseComplaintNotification` 接收 `http.Header` 和未经重新序列化的原始请求体；必须配置匹配的微信支付公钥或平台证书及服务商 APIv3 密钥。返回通知信封与解密后的投诉单号、动作类型。通知去重、保存及 HTTP 应答由调用方负责。
+- 普通回复最多 500 字符、4 张图片；图片支持 JPG、PNG、BMP，最大 2M。
+- 回复、即时服务回复、反馈处理完成遇到网络错误不自动重发，避免重复操作；调用方应查询确认处理结果。
+- 本次未增加退款审批、退款操作或回调地址配置接口。
+
+官方合作伙伴文档：[投诉业务示例](https://pay.wechatpay.cn/doc/v3/partner/4015933338)、[即时服务回复](https://pay.wechatpay.cn/doc/v3/partner/4017151726)、[投诉通知](https://pay.wechatpay.cn/doc/v3/partner/4012076174)。
+
 ## 参考资料
 * [微信支付商户平台API文档](https://pay.weixin.qq.com/wiki/doc/apiv3/index.shtml)
 * [微信支付服务商平台API文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/index.shtml)

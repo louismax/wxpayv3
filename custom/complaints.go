@@ -6,7 +6,9 @@ type RespComplaintsList struct {
 		ComplaintTime      string `json:"complaint_time"`
 		ComplaintDetail    string `json:"complaint_detail"`
 		ComplaintState     string `json:"complaint_state"`
+		ComplaintedMchid   string `json:"complainted_mchid"`
 		PayerPhone         string `json:"payer_phone"`
+		PayerOpenid        string `json:"payer_openid"`
 		ComplaintOrderInfo []struct {
 			TransactionID string `json:"transaction_id"`
 			OutTradeNo    string `json:"out_trade_no"`

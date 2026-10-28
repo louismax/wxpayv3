@@ -186,6 +186,22 @@ type Client interface {
 
 	// QueryComplaintsList 查询投诉单列表(兼容服务商模式、直连商户模式)
 	QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error)
+	// QueryComplaintDetail 查询投诉单详情
+	QueryComplaintDetail(complaintId string) (*custom.RespComplaintDetail, error)
+	// QueryComplaintNegotiationHistory 查询投诉单协商历史
+	QueryComplaintNegotiationHistory(complaintId string, limit, offset int) (*custom.RespComplaintNegotiationHistory, error)
+	// ResponseComplaint 回复用户，服务商需传入被诉子商户号
+	ResponseComplaint(complaintId string, data custom.ReqResponseComplaint) error
+	// ResponseComplaintImmediateService 回复需要即时服务的投诉单
+	ResponseComplaintImmediateService(complaintId string, data custom.ReqResponseComplaintImmediateService) (*custom.RespResponseComplaintImmediateService, error)
+	// CompleteComplaint 反馈投诉处理完成，不执行退款
+	CompleteComplaint(complaintId string, data custom.ReqCompleteComplaint) error
+	// UploadComplaintImage 上传投诉凭证图片，使用投诉专用上传接口
+	UploadComplaintImage(filePath string) (*custom.RespUploadImage, error)
+	// DownloadComplaintImage 按详情或协商历史返回的原始图片URL下载图片
+	DownloadComplaintImage(imageURL string) ([]byte, error)
+	// ParseComplaintNotification 对投诉通知原始报文验签并解密
+	ParseComplaintNotification(header http.Header, body []byte) (*custom.ComplaintNotification, *custom.ComplaintNotificationResource, error)
 
 	// PalmServicePreBind 刷掌票据预绑定
 	PalmServicePreBind(serviceId, ticketId string, data map[string]interface{}) (*custom.RespPalmServicePreBind, error)
@@ -209,7 +225,7 @@ type PayClient struct {
 	HttpClient              *http.Client                 // http客户端
 }
 
-func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string) ([]byte, error) {
+func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod string, attempts ...int) ([]byte, error) {
 	var data []byte
 	if requestData != nil {
 		var err error
@@ -231,8 +247,11 @@ func (c *PayClient) doRequest(requestData interface{}, url string, httpMethod st
 	if err != nil {
 		return nil, err
 	}
-	// 重试3次，避免因网络原因导致失败
+	// 默认最多请求3次；投诉写操作传1，避免结果不确定时重复回复。
 	retryTimes := 3
+	if len(attempts) > 0 {
+		retryTimes = attempts[0]
+	}
 	var resp *http.Response
 	for i := 0; i < retryTimes; i++ {
 		resp, err = SimpleRequest(c.HttpClient, url, httpMethod, authorization, data, serial)

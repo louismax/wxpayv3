@@ -98,6 +98,7 @@ type ReqCompleteComplaint struct {
 type ReqResponseComplaintImmediateService struct {
 	ComplaintedMchid string           `json:"complainted_mchid,omitempty"`
 	Message          ComplaintMessage `json:"message"`
+	IdempotentID     string           `json:"idempotent_id"` //必填，幂等ID，最长128字符；相同ID的请求只处理一次
 }
 
 type RespResponseComplaintImmediateService struct {

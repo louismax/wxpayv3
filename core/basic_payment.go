@@ -125,6 +125,23 @@ func (c *PayClient) PaymentRefundForPartner(data custom.ReqPaymentRefundForPartn
 	return &resp, nil
 }
 
+// PaymentQueryRefund 查询单笔退款结果，服务商模式必须传入原退款的子商户号。
+func (c *PayClient) PaymentQueryRefund(outRefundNo string, subMchId ...string) (*custom.RespPaymentRefund, error) {
+	qy := url.Values{}
+	if len(subMchId) > 0 {
+		qy.Set("sub_mchid", subMchId[0])
+	}
+	body, err := c.doRequest(nil, utils.BuildUrl(map[string]string{"out_refund_no": url.PathEscape(outRefundNo)}, qy, constant.APIPaymentQueryRefund), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespPaymentRefund{}
+	if err = json.Unmarshal(body, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
 // ApplyTransactionBill 申请交易账单
 func (c *PayClient) ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error) {
 	qy := url.Values{}

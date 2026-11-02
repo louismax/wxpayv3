@@ -88,6 +88,8 @@ type Client interface {
 	PaymentRefund(data custom.ReqPaymentRefund) (*custom.RespPaymentRefund, error)
 	//PaymentRefundForPartner 服务商退款
 	PaymentRefundForPartner(data custom.ReqPaymentRefundForPartner) (*custom.RespPaymentRefund, error)
+	// PaymentQueryRefund 查询单笔退款结果，服务商传入子商户号。
+	PaymentQueryRefund(outRefundNo string, subMchId ...string) (*custom.RespPaymentRefund, error)
 	//ApplyTransactionBill //申请交易账单
 	ApplyTransactionBill(billDate, subMchid, billType, tarType string) (*custom.RespApplyTransactionBill, error)
 	//ApplyFundBill //申请资金账单

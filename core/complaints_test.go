@@ -135,6 +135,15 @@ func TestComplaintRequests(t *testing.T) {
 					if body["complainted_mchid"] != "sub-mchid" {
 						t.Fatalf("缺少被诉子商户: %v", body)
 					}
+					if name == "immediate" {
+						if body["idempotent_id"] != "reply-request-1" {
+							t.Fatalf("即时回复未传递幂等ID: %v", body)
+						}
+						blocks := body["message"].(map[string]interface{})["blocks"].([]interface{})
+						if len(blocks) != 2 || blocks[0].(map[string]interface{})["type"] != "TEXT" || blocks[1].(map[string]interface{})["type"] != "IMAGE" {
+							t.Fatalf("即时回复消息类型错误: %v", body)
+						}
+					}
 					if name == "complete" && len(body) != 1 {
 						t.Fatalf("完成投诉不应发送其他字段: %v", body)
 					}
@@ -173,7 +182,10 @@ func TestComplaintRequests(t *testing.T) {
 			case "immediate":
 				var result *custom.RespResponseComplaintImmediateService
 				result, err = client.ResponseComplaintImmediateService("complaint-1", custom.ReqResponseComplaintImmediateService{
-					ComplaintedMchid: "sub-mchid", Message: custom.ComplaintMessage{Blocks: []custom.ComplaintMessageBlock{{Type: "TEXT", Text: &custom.ComplaintMessageText{Text: "已联系用户"}}}},
+					ComplaintedMchid: "sub-mchid", IdempotentID: "reply-request-1", Message: custom.ComplaintMessage{Blocks: []custom.ComplaintMessageBlock{
+						{Type: "TEXT", Text: &custom.ComplaintMessageText{Text: "已联系用户"}},
+						{Type: "IMAGE", Image: &custom.ComplaintMessageImage{MediaID: "media-1"}},
+					}},
 				})
 				if err == nil && result.LogID != "log-new" {
 					t.Fatalf("未返回即时服务流水号: %+v", result)

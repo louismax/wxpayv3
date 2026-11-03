@@ -78,6 +78,80 @@ func complaintVerifyRequest(t *testing.T, key *rsa.PrivateKey, req *http.Request
 	}
 }
 
+func TestComplaintNotificationSettings(t *testing.T) {
+	client, key := complaintTestClient(t)
+	for _, method := range []string{http.MethodPost, http.MethodGet, http.MethodPut, http.MethodDelete} {
+		for _, failure := range []string{"", "api-error", "transport-error", "bad-signature", "invalid-json"} {
+			if method == http.MethodDelete && failure == "invalid-json" {
+				continue
+			}
+			t.Run(method+"/"+failure, func(t *testing.T) {
+				calls := 0
+				client.HttpClient = &http.Client{Transport: complaintTransport(func(req *http.Request) (*http.Response, error) {
+					calls++
+					if req.Method != method || req.URL.Path != "/v3/merchant-service/complaint-notifications" || req.URL.RawQuery != "" {
+						t.Fatalf("投诉回调配置请求错误: %s %s", req.Method, req.URL)
+					}
+					var body []byte
+					if req.Body != nil {
+						body, _ = io.ReadAll(req.Body)
+					}
+					complaintVerifyRequest(t, key, req, body)
+					if method == http.MethodPost || method == http.MethodPut {
+						if string(body) != `{"url":"https://example.com/callback/wechatpay/complaints/service-provider"}` {
+							t.Fatalf("请求应仅包含url字段: %s", body)
+						}
+					} else if len(body) != 0 {
+						t.Fatal("查询、删除接口不应携带请求体")
+					}
+					if failure == "transport-error" {
+						return nil, fmt.Errorf("network error")
+					}
+					status, response := http.StatusOK, `{"mchid":"service-provider","url":"https://example.com/callback/wechatpay/complaints/service-provider"}`
+					if method == http.MethodDelete && failure == "" {
+						status, response = http.StatusNoContent, ""
+					}
+					if failure == "api-error" {
+						status, response = http.StatusBadRequest, `{"code":"PARAM_ERROR","message":"参数错误"}`
+					} else if failure == "invalid-json" {
+						response = "invalid-json"
+					}
+					header := complaintSignedHeaders(t, key, []byte(response))
+					if failure == "bad-signature" {
+						header.Set("Wechatpay-Signature", "invalid")
+					}
+					return &http.Response{StatusCode: status, Header: header, Body: io.NopCloser(strings.NewReader(response))}, nil
+				})}
+				var result *custom.RespComplaintNotifications
+				var err error
+				data := custom.ReqComplaintNotifications{URL: "https://example.com/callback/wechatpay/complaints/service-provider"}
+				switch method {
+				case http.MethodPost:
+					result, err = client.CreateComplaintNotifications(data)
+				case http.MethodGet:
+					result, err = client.QueryComplaintNotifications()
+				case http.MethodPut:
+					result, err = client.UpdateComplaintNotifications(data)
+				case http.MethodDelete:
+					err = client.DeleteComplaintNotifications()
+				}
+				if failure != "" {
+					if err == nil {
+						t.Fatal("接口失败或应答无效时未返回错误")
+					}
+				} else if err != nil {
+					t.Fatal(err)
+				} else if method != http.MethodDelete && (result.Mchid != "service-provider" || result.URL != data.URL) {
+					t.Fatalf("回调配置应答解析错误: %+v", result)
+				}
+				if method != http.MethodGet && calls != 1 {
+					t.Fatalf("回调配置写操作不应自动重试: %d", calls)
+				}
+			})
+		}
+	}
+}
+
 func TestComplaintRequests(t *testing.T) {
 	client, key := complaintTestClient(t)
 	const base = "/v3/merchant-service/complaints-v2"

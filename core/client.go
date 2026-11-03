@@ -186,6 +186,15 @@ type Client interface {
 	//DeleteViolationNotifications 删除商户违规通知回调地址
 	DeleteViolationNotifications() error
 
+	// CreateComplaintNotifications 创建投诉通知回调地址；服务商配置后接收所有子商户的投诉通知。
+	CreateComplaintNotifications(data custom.ReqComplaintNotifications) (*custom.RespComplaintNotifications, error)
+	// QueryComplaintNotifications 查询当前商户的投诉通知回调地址。
+	QueryComplaintNotifications() (*custom.RespComplaintNotifications, error)
+	// UpdateComplaintNotifications 更新当前商户的投诉通知回调地址。
+	UpdateComplaintNotifications(data custom.ReqComplaintNotifications) (*custom.RespComplaintNotifications, error)
+	// DeleteComplaintNotifications 删除当前商户的投诉通知回调地址。
+	DeleteComplaintNotifications() error
+
 	// QueryComplaintsList 查询投诉单列表(兼容服务商模式、直连商户模式)
 	QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error)
 	// QueryComplaintDetail 查询投诉单详情

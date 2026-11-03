@@ -110,7 +110,8 @@ const (
 const APIViolationNotifications = "/v3/merchant-risk-manage/violation-notifications" //商户违规通知
 
 const (
-	APIComplaintsList              = "/v3/merchant-service/complaints-v2" //查询投诉单列表
+	APIComplaintsList              = "/v3/merchant-service/complaints-v2"           //查询投诉单列表
+	APIComplaintNotifications      = "/v3/merchant-service/complaint-notifications" //投诉通知回调地址
 	APIComplaintDetail             = "/v3/merchant-service/complaints-v2/{complaint_id}"
 	APIComplaintNegotiationHistory = "/v3/merchant-service/complaints-v2/{complaint_id}/negotiation-historys"
 	APIComplaintResponse           = "/v3/merchant-service/complaints-v2/{complaint_id}/response"

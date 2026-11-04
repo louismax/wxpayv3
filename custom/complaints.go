@@ -1,5 +1,16 @@
 package custom
 
+// ReqComplaintNotifications 创建、更新投诉通知回调地址的请求。
+type ReqComplaintNotifications struct {
+	URL string `json:"url"` //通知地址，必填，最长255字符，仅支持HTTPS
+}
+
+// RespComplaintNotifications 创建、查询、更新投诉通知回调地址的结果。
+type RespComplaintNotifications struct {
+	Mchid string `json:"mchid"` //配置回调地址的商户号；服务商模式为服务商商户号
+	URL   string `json:"url"`   //投诉通知回调地址
+}
+
 type RespComplaintsList struct {
 	Data []struct {
 		ComplaintID        string `json:"complaint_id"`

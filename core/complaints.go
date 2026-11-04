@@ -10,6 +10,51 @@ import (
 	"strconv"
 )
 
+// CreateComplaintNotifications 创建投诉通知回调地址，服务商使用自身商户号签名，无需传子商户号。
+func (c *PayClient) CreateComplaintNotifications(data custom.ReqComplaintNotifications) (*custom.RespComplaintNotifications, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIComplaintNotifications), http.MethodPost, 1)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespComplaintNotifications{}
+	if err = json.Unmarshal(body, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// QueryComplaintNotifications 查询当前商户配置的投诉通知回调地址。
+func (c *PayClient) QueryComplaintNotifications() (*custom.RespComplaintNotifications, error) {
+	body, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.APIComplaintNotifications), http.MethodGet)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespComplaintNotifications{}
+	if err = json.Unmarshal(body, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// UpdateComplaintNotifications 更新投诉通知回调地址，不自动重试写操作。
+func (c *PayClient) UpdateComplaintNotifications(data custom.ReqComplaintNotifications) (*custom.RespComplaintNotifications, error) {
+	body, err := c.doRequest(data, utils.BuildUrl(nil, nil, constant.APIComplaintNotifications), http.MethodPut, 1)
+	if err != nil {
+		return nil, err
+	}
+	resp := custom.RespComplaintNotifications{}
+	if err = json.Unmarshal(body, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// DeleteComplaintNotifications 删除投诉通知回调地址，成功无应答包体，不自动重试写操作。
+func (c *PayClient) DeleteComplaintNotifications() error {
+	_, err := c.doRequest(nil, utils.BuildUrl(nil, nil, constant.APIComplaintNotifications), http.MethodDelete, 1)
+	return err
+}
+
 func (c *PayClient) QueryComplaintsList(beginDate, endDate string, limit, offset int, mchId ...string) (*custom.RespComplaintsList, error) {
 	query := url.Values{}
 	query.Set("begin_date", beginDate)

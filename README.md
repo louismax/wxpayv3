@@ -113,7 +113,31 @@ err = client.ResponseComplaint("投诉单号", custom.ReqResponseComplaint{
 - `ParseComplaintNotification` 接收 `http.Header` 和未经重新序列化的原始请求体；必须配置匹配的微信支付公钥或平台证书及服务商 APIv3 密钥。返回通知信封与解密后的投诉单号、动作类型。通知去重、保存及 HTTP 应答由调用方负责。
 - 普通回复最多 500 字符、4 张图片；图片支持 JPG、PNG、BMP，最大 2M。
 - 回复、即时服务回复、反馈处理完成遇到网络错误不自动重发，避免重复操作；调用方应查询确认处理结果。
-- 本次未增加退款审批、退款操作或回调地址配置接口。
+- 未增加退款审批、退款操作。
+
+### 投诉通知回调地址配置
+
+SDK 支持手动管理投诉通知回调地址，四个方法均已暴露在 `core.Client` 接口中：
+
+```go
+// client 使用服务商自身配置初始化，URL 中填写服务商商户号。
+data := custom.ReqComplaintNotifications{
+    URL: "https://你的域名/callback/wechatpay/complaints/服务商商户号",
+}
+
+// 根据实际需要分别调用，不要将增删改操作串行执行。
+created, err := client.CreateComplaintNotifications(data)
+current, err := client.QueryComplaintNotifications()
+updated, err := client.UpdateComplaintNotifications(data)
+err = client.DeleteComplaintNotifications()
+```
+
+- 创建、查询、更新返回 `RespComplaintNotifications`，包含 `Mchid` 和 `URL`；删除成功无返回包体，仅返回 `error`。
+- 服务商配置一次即可接收名下子商户投诉通知，不传 `sub_mchid` 或 `complainted_mchid`。
+- 创建、更新、删除不自动重试；结果不确定时先查询当前配置。
+- 地址仅支持 HTTPS，最长 255 字符。SDK 提供接口，不在业务系统中自动创建或修改配置。
+
+官方合作伙伴文档：[创建](https://pay.wechatpay.cn/doc/v3/partner/4012458106)、[查询](https://pay.wechatpay.cn/doc/v3/partner/4012459065)、[更新](https://pay.wechatpay.cn/doc/v3/partner/4012459287)、[删除](https://pay.wechatpay.cn/doc/v3/partner/4012460474)。
 
 官方合作伙伴文档：[投诉业务示例](https://pay.wechatpay.cn/doc/v3/partner/4015933338)、[即时服务回复](https://pay.wechatpay.cn/doc/v3/partner/4017151726)、[投诉通知](https://pay.wechatpay.cn/doc/v3/partner/4012076174)。
 
